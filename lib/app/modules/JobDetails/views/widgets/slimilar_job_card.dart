@@ -122,7 +122,7 @@ class _CardHeader extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
-                color: Get.theme.colorScheme.onBackground,
+                color: Get.theme.colorScheme.onSurface,
               ),
             ),
             Row(
@@ -164,7 +164,7 @@ class _CardJobPosition extends StatelessWidget {
       style: GoogleFonts.poppins(
         // fontSize: 13.sp,
         fontWeight: FontWeight.w600,
-        color: Get.theme.colorScheme.onBackground,
+        color: Get.theme.colorScheme.onSurface,
       ),
     );
   }
@@ -189,19 +189,19 @@ class _CardTags extends StatelessWidget {
           CustomTag(
             title: workplace,
             icon: HeroIcons.briefcase,
-            backgroundColor: Get.theme.backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             titleColor: Get.theme.colorScheme.secondary,
           ),
           CustomTag(
             title: employmentType,
             icon: HeroIcons.fire,
-            backgroundColor: Get.theme.backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             titleColor: Get.theme.colorScheme.secondary,
           ),
           CustomTag(
             title: location,
             icon: HeroIcons.mapPin,
-            backgroundColor: Get.theme.backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             titleColor: Get.theme.colorScheme.secondary,
           ),
         ],

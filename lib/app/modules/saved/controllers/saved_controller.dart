@@ -27,10 +27,6 @@ class SavedController extends GetxController {
 
   Status<List<JobOutDto>> get savedJobs => _rxSavedJobs.value;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   @override
   void onReady() {
@@ -38,10 +34,6 @@ class SavedController extends GetxController {
     getSavedJobs();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   Future<void> jumpToHome() async {
     _rootController.persistentTabController.jumpToTab(0);

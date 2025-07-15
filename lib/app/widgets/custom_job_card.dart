@@ -168,8 +168,8 @@ class _CardTile extends StatelessWidget {
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
                 color: isFeatured
-                    ? Get.theme.backgroundColor
-                    : Get.theme.colorScheme.onBackground,
+                    ? Get.theme.colorScheme.surface
+                    : Get.theme.colorScheme.onSurface,
               ),
             ),
             Row(
@@ -178,7 +178,7 @@ class _CardTile extends StatelessWidget {
                   HeroIcons.clock,
                   size: 16.w,
                   color: isFeatured
-                      ? Get.theme.backgroundColor
+                      ? Get.theme.colorScheme.surface
                       : Get.theme.colorScheme.secondary,
                 ),
                 SizedBox(width: 5.w),
@@ -188,7 +188,7 @@ class _CardTile extends StatelessWidget {
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w400,
                     color: isFeatured
-                        ? Get.theme.backgroundColor
+                        ? Get.theme.colorScheme.surface
                         : Get.theme.colorScheme.secondary,
                   ),
                 ),
@@ -202,7 +202,7 @@ class _CardTile extends StatelessWidget {
           isLiked: isSaved,
           size: 24.w,
           color: isFeatured
-              ? Get.theme.backgroundColor
+              ? Get.theme.colorScheme.surface
               : Get.theme.colorScheme.secondary,
         ),
       ],
@@ -232,8 +232,8 @@ class _CardJobPosition extends StatelessWidget {
           // fontSize: 13.sp,
           fontWeight: FontWeight.w600,
           color: isFeatured
-              ? Get.theme.backgroundColor
-              : Get.theme.colorScheme.onBackground,
+              ? Get.theme.colorScheme.surface
+              : Get.theme.colorScheme.onSurface,
         ),
       ),
     );
@@ -257,7 +257,7 @@ class _CardJobDescription extends StatelessWidget {
       style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w400,
-          color: Get.theme.colorScheme.onBackground.withOpacity(0.75)),
+          color: Get.theme.colorScheme.onSurface.withOpacity(0.75)),
     );
   }
 }
@@ -287,9 +287,9 @@ class _CardTags extends StatelessWidget {
           icon: HeroIcons.briefcase,
           backgroundColor: isFeatured
               ? Colors.white.withOpacity(0.15)
-              : Get.theme.backgroundColor,
+              : Get.theme.colorScheme.surface,
           titleColor: isFeatured
-              ? Get.theme.backgroundColor
+              ? Get.theme.colorScheme.surface
               : Get.theme.colorScheme.secondary,
         ),
         CustomTag(
@@ -297,9 +297,9 @@ class _CardTags extends StatelessWidget {
           icon: HeroIcons.fire,
           backgroundColor: isFeatured
               ? Colors.white.withOpacity(0.15)
-              : Get.theme.backgroundColor,
+              : Get.theme.colorScheme.surface,
           titleColor: isFeatured
-              ? Get.theme.backgroundColor
+              ? Get.theme.colorScheme.surface
               : Get.theme.colorScheme.secondary,
         ),
         CustomTag(
@@ -307,9 +307,9 @@ class _CardTags extends StatelessWidget {
           icon: HeroIcons.mapPin,
           backgroundColor: isFeatured
               ? Colors.white.withOpacity(0.15)
-              : Get.theme.backgroundColor,
+              : Get.theme.colorScheme.surface,
           titleColor: isFeatured
-              ? Get.theme.backgroundColor
+              ? Get.theme.colorScheme.surface
               : Get.theme.colorScheme.secondary,
         ),
       ],

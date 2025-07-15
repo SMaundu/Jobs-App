@@ -21,7 +21,7 @@ class WrappedChips extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.r),
             ),
-            backgroundColor: Get.theme.colorScheme.background,
+            backgroundColor: Get.theme.colorScheme.surface,
             labelPadding: EdgeInsets.all(8.w),
             label: Text(
               list[index],

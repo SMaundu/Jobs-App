@@ -12,11 +12,12 @@ class LoginView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Get.theme.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       resizeToAvoidBottomInset: false,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-          statusBarColor: Get.theme.backgroundColor,
+          statusBarColor: Theme.of(context).colorScheme.surface,
+
           statusBarIconBrightness: Brightness.dark,
           systemNavigationBarColor: Colors.white,
           systemNavigationBarIconBrightness: Brightness.dark,

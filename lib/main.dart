@@ -14,31 +14,38 @@ import 'app/modules/root/views/root_view.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Added for safety with async
   setupLocator();
   await GetStorage.init();
   await CountryCodes.init();
-  SystemChrome.setPreferredOrientations([
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(
-    ScreenUtilInit(
+  runApp(const JobsFlutterApp());
+}
+
+class JobsFlutterApp extends StatelessWidget {
+  const JobsFlutterApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (_, child) => GetMaterialApp(
+      builder: (_, __) => GetMaterialApp(
         locale: Get.locale,
         debugShowCheckedModeBanner: false,
         initialBinding: AuthBinding(),
-        home: Obx(
-          () => AuthController.to.currentUser != null
-              ? const RootView()
-              : const LoginView(),
-        ),
+        home: Obx(() {
+          final user = AuthController.to.currentUser;
+          return user != null ? const RootView() : const LoginView();
+        }),
         getPages: AppPages.routes,
         theme: AppTheme.lightTheme,
         defaultTransition: Transition.cupertino,
       ),
-    ),
-  );
+    );
+  }
 }

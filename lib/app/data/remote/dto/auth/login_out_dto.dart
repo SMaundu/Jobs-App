@@ -41,6 +41,7 @@ class LoginOutDto implements IDto {
         status: status ?? this.status,
       );
 
+  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (token != null) {

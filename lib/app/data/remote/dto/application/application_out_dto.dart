@@ -34,6 +34,7 @@ class ApplicationOutDto implements IDto {
         whyApply: whyApply ?? this.whyApply,
       );
 
+  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;

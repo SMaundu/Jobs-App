@@ -25,7 +25,7 @@ class RootView extends GetView<RootController> {
       drawerEdgeDragWidth: 0.0,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-          statusBarColor: Get.theme.backgroundColor,
+          statusBarColor: Theme.of(context).colorScheme.surface,
           statusBarIconBrightness: Brightness.dark,
           systemNavigationBarColor: Colors.white,
           systemNavigationBarIconBrightness: Brightness.dark,

@@ -11,15 +11,7 @@ class RootController extends GetxController {
   static RootController get to => Get.find();
   final persistentTabController = PersistentTabController(initialIndex: 0);
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {

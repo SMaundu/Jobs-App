@@ -22,7 +22,7 @@ class NoSaving extends GetView<SavedController> {
           style: GoogleFonts.poppins(
             fontSize: 24.sp,
             fontWeight: FontWeight.w700,
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
         ),
         SizedBox(height: 6.h),

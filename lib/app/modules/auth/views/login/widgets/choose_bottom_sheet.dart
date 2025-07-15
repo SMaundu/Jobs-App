@@ -21,7 +21,7 @@ class ChooseBottomSheetBody extends GetView<AuthController> {
           style: GoogleFonts.poppins(
             fontSize: 20.sp,
             fontWeight: FontWeight.w700,
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
         ),
         SizedBox(height: 42.h),

@@ -44,7 +44,7 @@ class MenuView extends GetView<RootController> {
             icon: HeroIcons.arrowLeftOnRectangle,
             title: "Logout",
             onTap: controller.logout,
-            textColor: Get.theme.errorColor,
+            textColor: Get.theme.colorScheme.error,
           ),
           SizedBox(height: 20.h),
         ],
@@ -172,7 +172,7 @@ class MenuItem extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w500,
-                  color: textColor ?? Get.theme.colorScheme.onBackground,
+                  color: textColor ?? Get.theme.colorScheme.onSurface,
                 ),
               ),
               if (subtitle != null)

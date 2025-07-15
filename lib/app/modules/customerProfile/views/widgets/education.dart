@@ -34,7 +34,7 @@ class EducationCard extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
-                        color: Get.theme.colorScheme.onBackground,
+                        color: Get.theme.colorScheme.onSurface,
                       ),
                     ),
                     SizedBox(height: 5.h),
@@ -57,7 +57,7 @@ class EducationCard extends StatelessWidget {
                     ),
                     if (index != education!.length - 1)
                       Divider(
-                        color: Get.theme.colorScheme.background,
+                        color: Get.theme.colorScheme.surface,
                         thickness: 1.5,
                       ),
                   ],

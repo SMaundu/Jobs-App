@@ -31,7 +31,7 @@ class Header extends GetView<JobDetailsController> {
             style: GoogleFonts.poppins(
               fontSize: 24.sp,
               fontWeight: FontWeight.w600,
-              color: Get.theme.backgroundColor,
+              color: Theme.of(context).colorScheme.surface,
             ),
             children: [
               TextSpan(text: job.position),
@@ -50,19 +50,19 @@ class Header extends GetView<JobDetailsController> {
                   title: job.workplace,
                   icon: HeroIcons.briefcase,
                   backgroundColor: Colors.white.withOpacity(0.15),
-                  titleColor: Get.theme.backgroundColor,
+                  titleColor: Theme.of(context).colorScheme.surface,
                 ),
                 CustomTag(
                   title: job.employmentType,
                   icon: HeroIcons.fire,
                   backgroundColor: Colors.white.withOpacity(0.15),
-                  titleColor: Get.theme.backgroundColor,
+                  titleColor: Theme.of(context).colorScheme.surface,
                 ),
                 CustomTag(
                   title: job.location,
                   icon: HeroIcons.mapPin,
                   backgroundColor: Colors.white.withOpacity(0.15),
-                  titleColor: Get.theme.backgroundColor,
+                  titleColor: Theme.of(context).colorScheme.surface,
                 ),
               ],
             ),
@@ -75,7 +75,7 @@ class Header extends GetView<JobDetailsController> {
               style: GoogleFonts.poppins(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w500,
-                color: Get.theme.backgroundColor,
+                color: Theme.of(context).colorScheme.surface,
               ),
             ),
           )

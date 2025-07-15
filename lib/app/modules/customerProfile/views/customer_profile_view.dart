@@ -11,12 +11,12 @@ class CustomerProfileView extends GetView<CustomerProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Get.theme.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarColor: Get.theme.primaryColor,
           statusBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: Get.theme.backgroundColor,
+          systemNavigationBarColor: Theme.of(context).colorScheme.surface,
           systemNavigationBarIconBrightness: Brightness.dark,
         ),
         child: const SafeArea(child: Body()),

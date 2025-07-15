@@ -27,12 +27,12 @@ class Description extends StatelessWidget {
           p: GoogleFonts.poppins(
             fontSize: 13.sp,
             fontWeight: FontWeight.w400,
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           h2: GoogleFonts.poppins(
             fontSize: 14.sp,
             fontWeight: FontWeight.w700,
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
         ),
       ),

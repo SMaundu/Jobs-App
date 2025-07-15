@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 class SliverPersistentHeaderDelegateImp extends SliverPersistentHeaderDelegate {
   final TabBar tabBar;
@@ -19,7 +18,7 @@ class SliverPersistentHeaderDelegateImp extends SliverPersistentHeaderDelegate {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: Get.theme.backgroundColor,
+          color: Theme.of(context).colorScheme.surface,
         ),
         child: Container(
           padding: EdgeInsets.all(5.w),

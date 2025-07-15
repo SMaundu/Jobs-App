@@ -35,15 +35,7 @@ class CompanyProfileController extends GetxController
     loadPage();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   getCompany() async {
     Status<CompanyOutDto> state = await _companyRepository.get(uuid: uuid);

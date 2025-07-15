@@ -36,15 +36,7 @@ class JobDetailsController extends GetxController {
     loadPage();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   Future<void> getJobDetails() async {
     final Status<JobOutDto> state = await _jobRepository.get(uuid: uuid);

@@ -28,6 +28,7 @@ class ApplicationInDto implements IDto {
         whyApply: whyApply ?? this.whyApply,
       );
 
+  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['customer_id'] = customerId;

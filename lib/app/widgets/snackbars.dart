@@ -9,10 +9,10 @@ class SnackBars {
     Get.snackbar(
       "",
       "",
-      backgroundColor: Get.theme.errorColor.withOpacity(0.85),
+      backgroundColor: Get.theme.colorScheme.error.withOpacity(0.85),
       icon: HeroIcon(
         HeroIcons.exclamationCircle,
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         size: 24.w,
         style: HeroIconStyle.solid,
       ),
@@ -26,7 +26,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w600,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
       messageText: Text(
@@ -36,7 +36,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w400,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
     );
@@ -49,7 +49,7 @@ class SnackBars {
       backgroundColor: Get.theme.primaryColor.withOpacity(0.85),
       icon: HeroIcon(
         HeroIcons.informationCircle,
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         size: 24.w,
         style: HeroIconStyle.solid,
       ),
@@ -63,7 +63,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w600,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
       messageText: Text(
@@ -73,7 +73,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w400,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
     );
@@ -86,7 +86,7 @@ class SnackBars {
       backgroundColor: Colors.orange.withOpacity(0.85),
       icon: HeroIcon(
         HeroIcons.exclamationTriangle,
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         size: 24.w,
         style: HeroIconStyle.solid,
       ),
@@ -100,7 +100,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w600,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
       messageText: Text(
@@ -110,7 +110,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w400,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
     );
@@ -123,7 +123,7 @@ class SnackBars {
       backgroundColor: Colors.green.withOpacity(0.85),
       icon: HeroIcon(
         HeroIcons.checkCircle,
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         size: 24.w,
         style: HeroIconStyle.solid,
       ),
@@ -137,7 +137,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w600,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
       messageText: Text(
@@ -147,7 +147,7 @@ class SnackBars {
         style: GoogleFonts.poppins(
           fontSize: 13.sp,
           fontWeight: FontWeight.w400,
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
         ),
       ),
     );

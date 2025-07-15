@@ -22,7 +22,7 @@ class ShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
       baseColor: Get.theme.primaryColor.withOpacity(0.38),
-      highlightColor: Get.theme.colorScheme.background,
+      highlightColor: Get.theme.colorScheme.surface,
       child: Container(
         width: width,
         height: height,

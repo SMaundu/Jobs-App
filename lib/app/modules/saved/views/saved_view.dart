@@ -11,7 +11,7 @@ class SavedView extends GetView<SavedController> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Get.theme.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: const CustomAppBar(title: "Saved Jobs"),
         body: const Body(),
       ),

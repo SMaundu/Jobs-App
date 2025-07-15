@@ -5,10 +5,10 @@ import 'package:heroicons/heroicons.dart';
 import 'package:jobs_flutter_app/app/core/values/strings.dart';
 
 import '../../../../widgets/custom_text_field.dart';
-import '../../controllers/search_controller.dart';
+import '../../controllers/search_controller.dart' as my_search;
 import 'search_items.dart';
 
-class Body extends GetView<SearchController> {
+class Body extends GetView<my_search.SearchController> {
   const Body({Key? key}) : super(key: key);
 
   @override

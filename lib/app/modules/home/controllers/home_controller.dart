@@ -55,15 +55,7 @@ class HomeController extends GetxController {
     _loadHome();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   void updateChipTitle(String title) {
     if (chipTitle != title) {

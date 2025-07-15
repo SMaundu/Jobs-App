@@ -21,15 +21,7 @@ class CustomerProfileController extends GetxController {
     loadPage();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   getProfile() async {
     final state = await customerRepository.getProfile(

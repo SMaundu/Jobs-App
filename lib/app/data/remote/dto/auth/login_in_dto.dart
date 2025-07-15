@@ -19,10 +19,11 @@ class LoginInDto implements IDto {
     String? password,
   }) =>
       LoginInDto(
-        emailOrPhone: email ?? this.emailOrPhone,
+        emailOrPhone: email ?? emailOrPhone,
         password: password ?? this.password,
       );
 
+  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['email_or_phone'] = emailOrPhone;

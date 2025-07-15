@@ -50,7 +50,7 @@ class CustomInfoCard extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w700,
-                  color: Get.theme.colorScheme.onBackground,
+                  color: Get.theme.colorScheme.onSurface,
                 ),
               ),
               const Spacer(),
@@ -63,7 +63,7 @@ class CustomInfoCard extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           Divider(
-            color: Get.theme.colorScheme.background,
+            color: Get.theme.colorScheme.surface,
             thickness: 1.5,
           ),
           SizedBox(height: 10.h),

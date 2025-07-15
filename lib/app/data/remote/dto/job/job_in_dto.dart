@@ -43,6 +43,7 @@ class JobInDto implements IDto {
         workplace: workplace ?? this.workplace,
       );
 
+  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['company_id'] = companyId;

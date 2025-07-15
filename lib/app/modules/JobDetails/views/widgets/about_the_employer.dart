@@ -66,7 +66,7 @@ class AboutTheEmployer extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             Divider(
-              color: Get.theme.colorScheme.background,
+              color: Get.theme.colorScheme.surface,
               thickness: 0.5,
             ),
             SizedBox(height: 4.h),

@@ -12,7 +12,7 @@ class WaitingView extends GetView<WaitingController> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Get.theme.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: const Body(),
       ),
     );

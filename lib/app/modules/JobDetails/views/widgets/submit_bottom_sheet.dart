@@ -26,7 +26,7 @@ class SubmitBottomSheet extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
         ),
         SizedBox(height: 10.h),

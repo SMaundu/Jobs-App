@@ -6,10 +6,10 @@ import 'package:jobs_flutter_app/app/core/values/strings.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../../data/remote/api/api_routes.dart';
 import '../../../../widgets/custom_lottie.dart';
-import '../../controllers/search_controller.dart';
+import '../../controllers/search_controller.dart' as local;
 import 'items_card.dart';
 
-class SearchResults extends GetView<SearchController> {
+class SearchResults extends GetView<local.SearchController> {
   const SearchResults({Key? key}) : super(key: key);
 
   @override

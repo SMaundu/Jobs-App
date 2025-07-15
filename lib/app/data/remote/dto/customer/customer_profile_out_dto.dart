@@ -83,6 +83,7 @@ class CustomerProfileOutDto implements IDto {
         cv: cv ?? this.cv,
       );
 
+  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;

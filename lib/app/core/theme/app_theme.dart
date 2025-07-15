@@ -17,24 +17,23 @@ class AppTheme {
   static final lightTheme = Get.theme.copyWith(
     visualDensity: VisualDensity.adaptivePlatformDensity,
     brightness: Brightness.light,
-    backgroundColor: backgroundColor,
+    scaffoldBackgroundColor: backgroundColor,
     primaryColor: blueColor,
     hintColor: lightGrayColor,
     cardColor: whiteColor,
-    errorColor: errorColor,
+    // errorColor: errorColor, // Removed because ThemeData does not support this parameter directly
     textTheme: _lightTextTheme,
     colorScheme: _lightColorScheme,
     elevatedButtonTheme: _lightElevatedButtonTheme,
     inputDecorationTheme: _inputDecorationTheme,
-    useMaterial3: true,
   );
 
   static final _lightTextTheme = Get.textTheme.copyWith(
-    button: GoogleFonts.poppins(
+    labelLarge: GoogleFonts.poppins(
       fontSize: 14.sp,
       fontWeight: FontWeight.w700,
     ),
-    caption: GoogleFonts.poppins(
+    bodySmall: GoogleFonts.poppins(
       fontSize: 13.sp,
       fontWeight: FontWeight.w400,
       color: lightGrayColor,
@@ -42,19 +41,20 @@ class AppTheme {
   );
 
   static final _lightColorScheme = ColorScheme.fromSwatch().copyWith(
-    background: backgroundColor,
-    onBackground: blackColor,
+    surface: backgroundColor,
+    onSurface: blackColor,
     primary: blueColor,
     onPrimary: backgroundColor,
     secondary: darkGrayColor,
     tertiary: lightGrayColor,
+    error: errorColor,
   );
 
   static final _lightElevatedButtonTheme = ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: blueColor,
       elevation: 10,
-      textStyle: _lightTextTheme.button,
+      textStyle: _lightTextTheme.labelLarge,
       shadowColor: blueColor.withOpacity(0.25),
       foregroundColor: backgroundColor,
       padding: EdgeInsets.all(16.w),
@@ -68,15 +68,15 @@ class AppTheme {
 
   static final _inputDecorationTheme = InputDecorationTheme(
     contentPadding: EdgeInsets.all(16.w),
-    hintStyle: _lightTextTheme.caption,
-    errorStyle: _lightTextTheme.caption?.copyWith(
+    hintStyle: _lightTextTheme.bodySmall,
+    errorStyle: _lightTextTheme.bodySmall?.copyWith(
       color: errorColor,
       fontSize: 10.sp,
     ),
     fillColor: whiteColor,
     filled: true,
     errorMaxLines: 3,
-    counterStyle: _lightTextTheme.caption?.copyWith(fontSize: 10.sp),
+    counterStyle: _lightTextTheme.bodySmall?.copyWith(fontSize: 10.sp),
     suffixIconColor: darkGrayColor,
     prefixIconColor: lightGrayColor,
     enabledBorder: _outlineInputBorder,

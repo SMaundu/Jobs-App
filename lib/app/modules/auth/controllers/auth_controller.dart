@@ -94,10 +94,6 @@ class AuthController extends GetxController {
     _rxCountry = RxString(details.dialCode!);
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {

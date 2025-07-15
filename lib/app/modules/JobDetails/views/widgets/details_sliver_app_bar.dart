@@ -69,7 +69,7 @@ class DetailsSliverAppBar extends GetView<JobDetailsController> {
       titleTextStyle: GoogleFonts.poppins(
         fontSize: 18.sp,
         fontWeight: FontWeight.w600,
-        color: Get.theme.backgroundColor,
+        color: Theme.of(context).colorScheme.surface,
       ),
       title: Padding(
         padding: EdgeInsets.symmetric(vertical: 6.h),

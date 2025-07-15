@@ -16,15 +16,7 @@ class SearchController extends GetxController {
 
   Status<List<SearchOutDto>> get rxResults => _rxResults.value;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {
