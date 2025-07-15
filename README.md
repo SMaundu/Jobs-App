@@ -31,7 +31,7 @@ It's built with the following technologies:
 
 ### Screenshots
 
-  <a href="https://github.com/devsadeq/JobsFlutterApp">
+  <a href="https://github.com/SMaundu/Jobs-App">
     <img src="assets/screenshots/screenshot (1).png" width="25%">
    <img src="assets/screenshots/screenshot (2).png" width="25%">
    <img src="assets/screenshots/screenshot (3).png" width="25%">
@@ -64,7 +64,7 @@ official Flutter website._
 1. Download or clone this repo by using the link below:
 
    ```sh
-   git clone https://github.com/devsadeq/JobsFlutterApp.git
+   git clone https://github.com/SMaundu/Jobs-App.git
    ```
 2. Go to project root and execute the following command in console to get the required dependencies:
 
