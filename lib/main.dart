@@ -40,7 +40,7 @@ class JobsFlutterApp extends StatelessWidget {
         initialBinding: AuthBinding(),
         home: Obx(() {
           final user = AuthController.to.currentUser;
-          return user != null ? const RootView() : const LoginView();
+          return user != null ? RootView() : LoginView();
         }),
         getPages: AppPages.routes,
         theme: AppTheme.lightTheme,

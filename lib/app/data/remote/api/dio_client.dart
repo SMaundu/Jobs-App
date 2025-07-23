@@ -9,8 +9,8 @@ class DioClient {
   DioClient(this._dio) {
     _dio
       ..options.baseUrl = ApiRoutes.BASE_URL
-      ..options.connectTimeout = 15000
-      ..options.receiveTimeout = 15000
+      ..options.connectTimeout = const Duration(milliseconds: 15000)
+      ..options.receiveTimeout = const Duration(milliseconds: 15000)
       ..options.responseType = ResponseType.json
       ..options.contentType = 'application/json'
       ..interceptors.add(DioInterceptor());
