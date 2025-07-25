@@ -8,12 +8,13 @@ import '../data/remote/repositories/application/application_repository.dart';
 import '../data/remote/repositories/auth/auth_repository.dart';
 import '../data/remote/repositories/company/company_repository.dart';
 import '../data/remote/repositories/customer/customer_repository.dart';
+import '../data/remote/repositories/home/home_repository.dart';
 import '../data/remote/repositories/job/job_repository.dart';
 import '../data/remote/repositories/position/position_repository.dart';
 import '../data/remote/repositories/search/search_repository.dart';
 import '../data/remote/services/application/application_service.dart';
 import '../data/remote/services/auth/auth_service.dart';
-import '../data/remote/services/company/comapny_service.dart';
+import '../data/remote/services/company/company_service.dart';
 import '../data/remote/services/customer/customer_service.dart';
 import '../data/remote/services/job/job_service.dart';
 import '../data/remote/services/position/position_choice_service.dart';
@@ -62,4 +63,11 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(ApplicationService(dioClient: getIt<DioClient>()));
   getIt.registerSingleton(
       ApplicationRepository(service: getIt<ApplicationService>()));
+
+  /// Home Repository
+  getIt.registerSingleton(HomeRepository(
+    jobRepository: getIt<JobRepository>(),
+    positionRepository: getIt<PositionRepository>(),
+    customerRepository: getIt<CustomerRepository>(),
+  ));
 }

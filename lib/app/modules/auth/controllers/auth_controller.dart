@@ -1,5 +1,6 @@
 import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
 
@@ -22,7 +23,6 @@ import '../views/login/widgets/choose_bottom_sheet.dart';
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
   final _authRepository = getIt.get<AuthRepository>();
-  final CountryDetails details = CountryCodes.detailsForLocale();
 
   /*
   * Customer Form Fields.
@@ -55,7 +55,7 @@ class AuthController extends GetxController {
   * Rx
   * */
 
-  late final RxString _rxCountry;
+  final RxString _rxCountry = RxString('');
 
   String get country => _rxCountry.value;
 
@@ -91,7 +91,15 @@ class AuthController extends GetxController {
   void onInit() {
     super.onInit();
     _getCurrentUser();
-    _rxCountry = RxString(details.dialCode!);
+    if (!kIsWeb) {
+      try {
+        final CountryDetails details = CountryCodes.detailsForLocale();
+        _rxCountry.value = details.dialCode ?? '';
+      } catch (e) {
+        debugPrint("Could not get country details for locale: $e");
+        _rxCountry.value = ''; // Fallback value
+      }
+    }
   }
 
 

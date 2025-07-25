@@ -31,6 +31,7 @@ class LoginOutDto implements IDto {
     String? id,
     String? name,
     String? email,
+    String? role,
     String? status,
   }) =>
       LoginOutDto(
@@ -38,6 +39,7 @@ class LoginOutDto implements IDto {
         id: id ?? this.id,
         name: name ?? this.name,
         email: email ?? this.email,
+        role: role ?? this.role,
         status: status ?? this.status,
       );
 

@@ -31,11 +31,13 @@ dependencies:
   shimmer: ^3.0.0
   awesome_dialog: ^3.2.1
   awesome_snackbar_content: ^0.1.6
-  country_codes: ^3.3.0
+  country_codes: ^2.0.1
   smooth_page_indicator: ^1.2.1
   url_launcher: ^6.3.2
   flutter_svg_provider: ^1.0.7
   expandable: ^5.0.1
+  firebase_core: ^2.32.0
+  firebase_auth: ^4.20.0
 
 dev_dependencies:
   build_runner: ^2.2.1
