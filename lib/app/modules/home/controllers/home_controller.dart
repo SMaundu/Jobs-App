@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart'; // Import for CarouselPageChangedReason
 
 import '../../../data/remote/base/status.dart';
 import '../../../data/remote/dto/job/job_out_dto.dart';
-import '../../../data/remote/dto/position/position_out_dto.dart';
+import '../../../data/remote/dto/position/position_out_dto.dart'; // Corrected import path
 import '../../../data/remote/repositories/home/home_repository.dart';
 import '../../../di/locator.dart';
 
 class HomeController extends GetxController {
+  static HomeController get to => Get.find();
+
   final HomeRepository _repository = getIt.get<HomeRepository>();
 
   final _customerAvatar = const Status<String>.idle().obs;
@@ -28,7 +31,9 @@ class HomeController extends GetxController {
   final indicatorIndex = 0.obs;
   final chipTitle = "All".obs;
 
-  void updateIndicatorValue(int index) => indicatorIndex.value = index;
+  // Corrected signature to match CarouselPageChangedReason
+  void updateIndicatorValue(int index, CarouselPageChangedReason reason) =>
+      indicatorIndex.value = index;
 
   void updateChipTitle(String title) => chipTitle.value = title;
 
@@ -44,14 +49,14 @@ class HomeController extends GetxController {
     _recentJobs.value = const Status.loading();
     _positions.value = const Status.loading();
     await Future.wait([
-      _getFeaturedJobs(),
-      _getRecentJobs(),
+      getFeaturedJobs(),
+      getRecentJobs(),
       _getPositions(),
       _getCustomerAvatar(),
     ]);
   }
 
-  Future<void> _getFeaturedJobs() async {
+  Future<void> getFeaturedJobs() async {
     try {
       final response = await _repository.getFeaturedJobs();
       final jobs = response.data?.jobs;
@@ -68,7 +73,7 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> _getRecentJobs() async {
+  Future<void> getRecentJobs() async {
     try {
       final response = await _repository.getRecentJobs();
       final jobs = response.data?.jobs;
@@ -116,8 +121,22 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> onSaveButtonTapped(bool isSaved, String jobId) async {
-    // TODO: Implement save/unsave job logic
+  // Changed return type to Future<bool?> as expected by the UI.
+  // The actual logic for saving/unsaving should return true/false based on success.
+  Future<bool?> onSaveButtonTapped(bool isSaved, String jobId) async {
+    // TODO: Implement actual save/unsave job logic here
     print("Job $jobId saved: ${!isSaved}");
+    // For demonstration, let's assume it always succeeds and toggles the state
+    return !isSaved;
+  }
+
+  void animateToStart() {
+    if (homeScrollController.hasClients) {
+      homeScrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 }

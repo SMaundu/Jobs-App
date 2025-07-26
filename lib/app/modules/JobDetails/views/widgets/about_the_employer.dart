@@ -19,7 +19,7 @@ class AboutTheEmployer extends StatelessWidget {
     return GestureDetector(
       onTap: () => Get.toNamed(
         Routes.COMPANY_PROFILE,
-        arguments: job.company!.id,
+        arguments: job.companyId,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.w),
@@ -75,7 +75,7 @@ class AboutTheEmployer extends StatelessWidget {
               child: Row(
                 children: [
                   CustomAvatar(
-                    imageUrl: "${ApiRoutes.BASE_URL}${job.company!.image}",
+                    imageUrl: "${ApiRoutes.BASE_URL}${job.companyImage}",
                     height: 40.h,
                   ),
                   SizedBox(width: 5.w),
@@ -85,7 +85,7 @@ class AboutTheEmployer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          job.company!.name!,
+                          job.companyName ?? '',
                           style: GoogleFonts.poppins(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500,

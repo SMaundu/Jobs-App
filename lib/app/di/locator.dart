@@ -15,6 +15,7 @@ import '../data/remote/repositories/search/search_repository.dart';
 import '../data/remote/services/application/application_service.dart';
 import '../data/remote/services/auth/auth_service.dart';
 import '../data/remote/services/company/company_service.dart';
+import '../data/remote/services/company/i_company_service.dart'; // Import the interface
 import '../data/remote/services/customer/customer_service.dart';
 import '../data/remote/services/job/job_service.dart';
 import '../data/remote/services/position/position_choice_service.dart';
@@ -45,11 +46,12 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(SearchRepository(service: getIt<SearchService>()));
 
   /// Company Service & Repository
-  getIt.registerSingleton(CompanyService(dioClient: getIt<DioClient>()));
-  getIt.registerSingleton(CompanyRepository(service: getIt<CompanyService>()));
+  getIt.registerSingleton<ICompanyService>(CompanyService(dioClient: getIt<DioClient>()));
+  getIt.registerSingleton(CompanyRepository(service: getIt<ICompanyService>()));
 
   /// Customer Service & Repository
   getIt.registerSingleton(CustomerService(dioClient: getIt<DioClient>()));
+  // Use the correct named parameter 'service' for CustomerRepository.
   getIt.registerSingleton(CustomerRepository(service: getIt<CustomerService>()));
 
   /// Auth Service & Repository

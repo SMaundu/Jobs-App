@@ -1,10 +1,8 @@
-import '../base/idto.dart';
-
-List<PositionOutDto> positionsFromJson(List<dynamic> list) =>
-    List<PositionOutDto>.from(list.map((x) => PositionOutDto.fromJson(x)));
-
-class PositionOutDto implements IDto {
-  PositionOutDto({this.id, this.name});
+class PositionOutDto {
+  PositionOutDto({
+    this.id,
+    this.name,
+  });
 
   PositionOutDto.fromJson(dynamic json) {
     id = json['id'];
@@ -14,7 +12,6 @@ class PositionOutDto implements IDto {
   String? id;
   String? name;
 
-  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -22,3 +19,8 @@ class PositionOutDto implements IDto {
     return map;
   }
 }
+
+List<PositionOutDto> positionsFromJson(List<dynamic> json) =>
+    List<PositionOutDto>.from(json.map((x) => PositionOutDto.fromJson(x)));
+
+    

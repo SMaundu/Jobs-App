@@ -67,7 +67,7 @@ class FeaturedJobs extends GetView<HomeController> {
             Obx(
               () => AnimatedSmoothIndicator(
                 count: jobs.length,
-                activeIndex: controller.indicatorIndex,
+                activeIndex: controller.indicatorIndex.value,
                 effect: ScrollingDotsEffect(
                   activeDotColor: Get.theme.colorScheme.primary,
                   dotColor: const Color(0xffE4E5E7),

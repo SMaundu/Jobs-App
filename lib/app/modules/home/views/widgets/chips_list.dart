@@ -24,10 +24,10 @@ class ChipsList extends GetView<HomeController> {
             shrinkWrap: true,
             itemBuilder: (context, index) => Obx(
               () => CustomChip(
-                title: positions[index].jobTitle!,
-                isActive: positions[index].jobTitle == controller.chipTitle,
+                title: positions[index].name!,
+                isActive: positions[index].name == controller.chipTitle,
                 onPressed: () =>
-                    controller.updateChipTitle(positions[index].jobTitle!),
+                    controller.updateChipTitle(positions[index].name!),
               ),
             ),
           ),
