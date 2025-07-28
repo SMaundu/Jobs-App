@@ -14,7 +14,7 @@ class DetailsBottomNavBar extends GetView<JobDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => (controller.job is! Success)
+      () => (!controller.job.isSuccess) // Changed from 'is! Success' to '!controller.job.isSuccess'
           ? const SizedBox.shrink()
           : Container(
               height: 85.h,
@@ -38,7 +38,8 @@ class DetailsBottomNavBar extends GetView<JobDetailsController> {
                 title: "APPLY NOW",
                 onTap: () => popupBottomSheet(
                   bottomSheetBody: ApplyBottomSheetBody(
-                    controller.job.whenOrNull(success: (job) => job!.id!)!,
+                    // Directly access data.id after checking isSuccess
+                    controller.job.data!.id!,
                   ),
                 ),
               ),

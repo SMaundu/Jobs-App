@@ -4,7 +4,7 @@ import '../../../local/base/i_entity.dart';
 import '../../../local/services/storage_service.dart';
 import 'i_auth_repository.dart';
 import '../../base/idto.dart';
-import '../../base/status.dart';
+import '../../base/status.dart'; // Ensure this Status class matches the one I provided earlier
 import '../../dto/auth/login_out_dto.dart';
 import '../../dto/auth/register_company_out_dto.dart';
 import '../../dto/auth/register_customer_out_dto.dart';
@@ -24,10 +24,10 @@ class AuthRepository implements IAuthRepository<Status<dynamic>> {
   Future<Status<LoginOutDto>> login({required IDto dto}) async {
     try {
       final response = await authService.login(dto: dto);
-      return Status.success(data: LoginOutDto.fromJson(response.data));
+      return Status.success(LoginOutDto.fromJson(response.data)); // Changed from Status.success(data: ...)
     } on DioError catch (e) {
       final errMsg = DioExceptions.fromDioError(e).toString();
-      return Status.failure(reason: errMsg);
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: ...)
     }
   }
 
@@ -37,10 +37,10 @@ class AuthRepository implements IAuthRepository<Status<dynamic>> {
     try {
       final response = await authService.registerCompany(dto: dto);
       return Status.success(
-          data: RegisterCompanyOutDto.fromJson(response.data));
+          RegisterCompanyOutDto.fromJson(response.data)); // Changed from Status.success(data: ...)
     } on DioError catch (e) {
       final errMsg = DioExceptions.fromDioError(e).toString();
-      return Status.failure(reason: errMsg);
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: ...)
     }
   }
 
@@ -51,24 +51,24 @@ class AuthRepository implements IAuthRepository<Status<dynamic>> {
     try {
       final response = await authService.registerCustomer(dto: dto);
       return Status.success(
-          data: RegisterCustomerOutDto.fromJson(response.data));
+          RegisterCustomerOutDto.fromJson(response.data)); // Changed from Status.success(data: ...)
     } on DioError catch (e) {
       final errMsg = DioExceptions.fromDioError(e).toString();
-      return Status.failure(reason: errMsg);
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: ...)
     }
   }
 
   /*
-  * Local Storage
-  * */
+   * Local Storage
+   * */
   @override
   Future<Status<dynamic>> readStorage({required String key}) async {
     try {
       final result = await storageService.read(key: key);
-      if (result != null) return Status.success(data: result);
-      return const Status.failure(reason: "Not Found!");
+      if (result != null) return Status.success(result); // Changed from Status.success(data: ...)
+      return Status.error(message: "Not Found!"); // Changed from Status.failure(reason: ...)
     } catch (e) {
-      return Status.failure(reason: e.toString());
+      return Status.error(message: e.toString()); // Changed from Status.failure(reason: ...)
     }
   }
 
@@ -79,9 +79,9 @@ class AuthRepository implements IAuthRepository<Status<dynamic>> {
   }) async {
     try {
       await storageService.write(key: key, entity: entity);
-      return const Status.success(data: "User has been saved successfully.");
+      return Status.success("User has been saved successfully."); // Changed from Status.success(data: ...)
     } catch (e) {
-      return Status.failure(reason: e.toString());
+      return Status.error(message: e.toString()); // Changed from Status.failure(reason: ...)
     }
   }
 
@@ -89,9 +89,9 @@ class AuthRepository implements IAuthRepository<Status<dynamic>> {
   Future<Status> removeStorage({required String key}) async {
     try {
       await storageService.remove(key: key);
-      return const Status.success(data: "User has been removed successfully.");
+      return Status.success("User has been removed successfully."); // Changed from Status.success(data: ...)
     } catch (e) {
-      return Status.failure(reason: e.toString());
+      return Status.error(message: e.toString()); // Changed from Status.failure(reason: ...)
     }
   }
 }

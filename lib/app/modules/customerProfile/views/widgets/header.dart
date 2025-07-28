@@ -4,10 +4,10 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../data/remote/api/api_routes.dart';
 import '../../../../data/remote/dto/customer/customer_profile_out_dto.dart';
 import '../../../../widgets/custom_avatar.dart';
-import '../../../JobDetails/controllers/job_details_controller.dart';
+import '../../../../data/remote/api/api_routes.dart'; // Ensure ApiRoutes is imported
+import '../../../JobDetails/controllers/job_details_controller.dart'; // Ensure this import is correct
 
 class Header extends GetView<JobDetailsController> {
   const Header({
@@ -22,7 +22,7 @@ class Header extends GetView<JobDetailsController> {
       padding: EdgeInsets.only(right: 16.w, left: 16.w, top: 30.h),
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: Svg('assets/header_bg.svg', color: Colors.white),
+          image: Svg('assets/header_bg.svg', color: Colors.white), // Ensure asset path is correct
           fit: BoxFit.cover,
         ),
       ),
@@ -30,10 +30,12 @@ class Header extends GetView<JobDetailsController> {
         padding: EdgeInsets.only(top: 30.h),
         child: Column(
           children: [
-            CustomAvatar(imageUrl: "${ApiRoutes.BASE_URL}${profile.image}"),
+            // Use profile.avatar and provide a placeholder if null
+            CustomAvatar(imageUrl: "${ApiRoutes.BASE_URL}${profile.avatar ?? 'placeholder.png'}"),
             SizedBox(height: 5.h),
             Text(
-              profile.name!,
+              // Use null-aware operator and provide fallback empty string
+              profile.name ?? '',
               style: GoogleFonts.poppins(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
@@ -41,7 +43,8 @@ class Header extends GetView<JobDetailsController> {
               ),
             ),
             Text(
-              profile.jobTitle!,
+              // Use null-aware operator and provide fallback empty string for the new jobTitle field
+              profile.jobTitle ?? '',
               style: GoogleFonts.poppins(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w400,

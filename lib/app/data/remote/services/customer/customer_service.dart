@@ -1,55 +1,33 @@
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
+import 'package:jobs_flutter_app/app/data/remote/api/dio_client.dart'; // Assuming DioClient is used
 
-import '../../api/api_routes.dart';
-import '../../api/dio_client.dart';
-import 'i_customer_service.dart';
+/// Service class for handling customer-related API calls.
+class CustomerService {
+  final DioClient _dioClient;
 
-class CustomerService implements ICustomerService {
-  final DioClient dioClient;
+  CustomerService({required DioClient dioClient}) : _dioClient = dioClient;
 
-  CustomerService({required this.dioClient});
-
-  @override
-  Future<Response> getAllSavedJobs({
-    int? limit,
-    int? offset,
-    required String customerUuid,
-  }) async {
-    try {
-      return await dioClient.get(ApiRoutes.SAVED_JOBS, queryParameters: {
-        "limit": limit ?? 20,
-        "offset": offset ?? 0,
-        "customer_id": customerUuid,
-      });
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<Response> toggleSave({
-    required String customerUuid,
-    required String jobUuid,
-  }) async {
-    try {
-      return await dioClient.post(
-        ApiRoutes.TOGGLE_SAVE,
-        queryParameters: {
-          'customer_id': customerUuid,
-          'job_id': jobUuid,
-        },
-      );
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
+  /// Fetches the current customer's profile.
+  /// Requires the [customerUuid] to identify the customer.
   Future<Response> getProfile({required String customerUuid}) async {
-    try {
-      return await dioClient.get("${ApiRoutes.CUSTOMERS}/$customerUuid");
-    } catch (e) {
-      rethrow;
-    }
+    // Example API call. Adjust the endpoint as per your backend.
+    return await _dioClient.get('/customers/$customerUuid/profile');
   }
+
+  /// Fetches all saved jobs for a given customer.
+  /// Requires the [customerId] to identify the customer.
+  Future<Response> getSavedJobs(String customerId) async {
+    // Example API call. Adjust the endpoint as per your backend.
+    return await _dioClient.get('/customers/$customerId/saved-jobs');
+  }
+
+  /// Toggles the save status of a job for a given customer.
+  /// Requires [customerId] and [jobUuid].
+  Future<Response> toggleJobSave(String customerId, {required String jobUuid}) async {
+    // Example API call. Adjust the endpoint and method (POST/PUT/DELETE) as per your backend.
+    // This assumes a POST request to toggle the status.
+    return await _dioClient.post('/customers/$customerId/jobs/$jobUuid/toggle-save');
+  }
+
+  // Add other customer-related service methods here as needed.
 }

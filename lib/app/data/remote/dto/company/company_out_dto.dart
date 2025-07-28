@@ -1,6 +1,20 @@
 import 'package:jobs_flutter_app/app/data/remote/base/idto.dart';
 
 class CompanyOutDto implements IDto {
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? phone;
+  final String? description;
+  final String? workType;
+  final String? city;
+  final String? address;
+  final String? image;
+  final String? website; // Added missing field
+  final String? headOffice; // Added missing field
+  final String? type; // Added missing field
+  final int? foundedYear; // Added missing field
+
   CompanyOutDto({
     this.id,
     this.name,
@@ -11,29 +25,29 @@ class CompanyOutDto implements IDto {
     this.city,
     this.address,
     this.image,
+    this.website, // Added to constructor
+    this.headOffice, // Added to constructor
+    this.type, // Added to constructor
+    this.foundedYear, // Added to constructor
   });
 
-  CompanyOutDto.fromJson(dynamic json) {
-    id = json['id'];
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
-    description = json['description'];
-    workType = json['work_type'];
-    city = json['city'];
-    address = json['address'];
-    image = json['image'];
+  factory CompanyOutDto.fromJson(Map<String, dynamic> json) {
+    return CompanyOutDto(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone'],
+      description: json['description'],
+      workType: json['work_type'],
+      city: json['city'],
+      address: json['address'],
+      image: json['image'],
+      website: json['website'], // Parse from JSON
+      headOffice: json['headOffice'], // Parse from JSON
+      type: json['type'], // Parse from JSON
+      foundedYear: json['foundedYear'], // Parse from JSON
+    );
   }
-
-  String? id;
-  String? name;
-  String? email;
-  String? phone;
-  String? description;
-  String? workType;
-  String? city;
-  String? address;
-  String? image;
 
   CompanyOutDto copyWith({
     String? id,
@@ -45,6 +59,10 @@ class CompanyOutDto implements IDto {
     String? city,
     String? address,
     String? image,
+    String? website,
+    String? headOffice,
+    String? type,
+    int? foundedYear,
   }) =>
       CompanyOutDto(
         id: id ?? this.id,
@@ -56,6 +74,10 @@ class CompanyOutDto implements IDto {
         city: city ?? this.city,
         address: address ?? this.address,
         image: image ?? this.image,
+        website: website ?? this.website,
+        headOffice: headOffice ?? this.headOffice,
+        type: type ?? this.type,
+        foundedYear: foundedYear ?? this.foundedYear,
       );
 
   @override
@@ -70,6 +92,10 @@ class CompanyOutDto implements IDto {
     map['city'] = city;
     map['address'] = address;
     map['image'] = image;
+    map['website'] = website; // Add to toJson
+    map['headOffice'] = headOffice; // Add to toJson
+    map['type'] = type; // Add to toJson
+    map['foundedYear'] = foundedYear; // Add to toJson
     return map;
   }
 }

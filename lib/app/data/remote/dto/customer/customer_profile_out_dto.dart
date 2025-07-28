@@ -1,217 +1,160 @@
-import '../../base/idto.dart';
+import 'package:jobs_flutter_app/app/data/remote/dto/job/job_out_dto.dart'; // Assuming JobOutDto is needed for savedJobs
 
-class CustomerProfileOutDto implements IDto {
+/// Data Transfer Object for a customer's full profile details.
+class CustomerProfileOutDto {
+  final String? id;
+  final String? userId; // Assuming a link to a user ID
+  final String? name;
+  final String? email;
+  final String? phone;
+  final String? location;
+  final String? bio;
+  final String? avatar; // URL or path to avatar image
+  final String? jobTitle; // Added the missing jobTitle field
+  final String? description; // <-- ADDED THIS MISSING FIELD
+  final List<String>? skills; // List of skills
+  final List<WorkExperience>? workExperience; // List of work experiences
+  final List<Education>? education; // List of education entries
+  final List<String>? language; // <-- ADDED THIS MISSING FIELD
+  final List<JobOutDto>? savedJobs; // List of saved jobs, assuming JobOutDto is correct
+
   CustomerProfileOutDto({
     this.id,
+    this.userId,
     this.name,
+    this.email,
     this.phone,
-    this.education,
-    this.workExperience,
-    this.description,
-    this.address,
-    this.skills,
-    this.language,
+    this.location,
+    this.bio,
+    this.avatar,
     this.jobTitle,
-    this.image,
-    this.cv,
+    this.description, // <-- ADDED TO CONSTRUCTOR
+    this.skills,
+    this.workExperience,
+    this.education,
+    this.language, // <-- ADDED TO CONSTRUCTOR
+    this.savedJobs,
   });
 
-  CustomerProfileOutDto.fromJson(dynamic json) {
-    id = json['id'];
-    name = json['name'];
-    phone = json['phone'];
-    if (json['education'] != null) {
-      education = [];
-      json['education'].forEach((v) {
-        education?.add(Education.fromJson(v));
-      });
-    }
-    if (json['work_experience'] != null) {
-      workExperience = [];
-      json['work_experience'].forEach((v) {
-        workExperience?.add(WorkExperience.fromJson(v));
-      });
-    }
-    description = json['description'];
-    address = json['address'];
-    skills = json['skills'] != null ? json['skills'].cast<String>() : [];
-    language = json['language'] != null ? json['language'].cast<String>() : [];
-    jobTitle = json['job_title'];
-    image = json['image'];
-    cv = json['cv'];
+  factory CustomerProfileOutDto.fromJson(Map<String, dynamic> json) {
+    return CustomerProfileOutDto(
+      id: json['id'],
+      userId: json['userId'],
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone'],
+      location: json['location'],
+      bio: json['bio'],
+      avatar: json['avatar'],
+      jobTitle: json['jobTitle'],
+      description: json['description'], // <-- PARSE FROM JSON
+      skills: (json['skills'] as List?)?.map((e) => e.toString()).toList(),
+      workExperience: (json['workExperience'] as List?)
+          ?.map((e) => WorkExperience.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      education: (json['education'] as List?)
+          ?.map((e) => Education.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      language: (json['language'] as List?)?.map((e) => e.toString()).toList(), // <-- PARSE FROM JSON
+      savedJobs: (json['savedJobs'] as List?)
+          ?.map((e) => JobOutDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
-  String? id;
-  String? name;
-  String? phone;
-  List<Education>? education;
-  List<WorkExperience>? workExperience;
-  String? description;
-  dynamic address;
-  List<String>? skills;
-  List<String>? language;
-  String? jobTitle;
-  String? image;
-  String? cv;
-
-  CustomerProfileOutDto copyWith({
-    String? id,
-    String? name,
-    String? phone,
-    List<Education>? education,
-    List<WorkExperience>? workExperience,
-    String? description,
-    dynamic address,
-    List<String>? skills,
-    List<String>? language,
-    String? jobTitle,
-    String? image,
-    String? cv,
-  }) =>
-      CustomerProfileOutDto(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        phone: phone ?? this.phone,
-        education: education ?? this.education,
-        workExperience: workExperience ?? this.workExperience,
-        description: description ?? this.description,
-        address: address ?? this.address,
-        skills: skills ?? this.skills,
-        language: language ?? this.language,
-        jobTitle: jobTitle ?? this.jobTitle,
-        image: image ?? this.image,
-        cv: cv ?? this.cv,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = id;
-    map['name'] = name;
-    map['phone'] = phone;
-    if (education != null) {
-      map['education'] = education?.map((v) => v.toJson()).toList();
-    }
-    if (workExperience != null) {
-      map['work_experience'] = workExperience?.map((v) => v.toJson()).toList();
-    }
-    map['description'] = description;
-    map['address'] = address;
-    map['skills'] = skills;
-    map['language'] = language;
-    map['job_title'] = jobTitle;
-    map['image'] = image;
-    map['cv'] = cv;
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'userId': userId,
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'location': location,
+        'bio': bio,
+        'avatar': avatar,
+        'jobTitle': jobTitle,
+        'description': description, // <-- ADDED TO toJson
+        'skills': skills,
+        'workExperience': workExperience?.map((e) => e.toJson()).toList(),
+        'education': education?.map((e) => e.toJson()).toList(),
+        'language': language, // <-- ADDED TO toJson
+        'savedJobs': savedJobs?.map((e) => e.toJson()).toList(),
+      };
 }
 
+/// Represents a single work experience entry for a customer.
 class WorkExperience {
+  final String? id;
+  final String? title;
+  final String? companyWorkedFor;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String? description; // Optional: detailed description of responsibilities
+
   WorkExperience({
     this.id,
-    this.customerId,
     this.title,
     this.companyWorkedFor,
     this.startDate,
     this.endDate,
+    this.description,
   });
 
-  WorkExperience.fromJson(dynamic json) {
-    id = json['id'];
-    customerId = json['customer_id'];
-    title = json['title'];
-    companyWorkedFor = json['company_worked_for'];
-    startDate = json['start_date'];
-    endDate = json['end_date'];
+  factory WorkExperience.fromJson(Map<String, dynamic> json) {
+    return WorkExperience(
+      id: json['id'],
+      title: json['title'],
+      companyWorkedFor: json['companyWorkedFor'],
+      startDate: json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
+      description: json['description'],
+    );
   }
 
-  String? id;
-  String? customerId;
-  String? title;
-  String? companyWorkedFor;
-  String? startDate;
-  String? endDate;
-
-  WorkExperience copyWith({
-    String? id,
-    String? customerId,
-    String? title,
-    String? companyWorkedFor,
-    String? startDate,
-    String? endDate,
-  }) =>
-      WorkExperience(
-        id: id ?? this.id,
-        customerId: customerId ?? this.customerId,
-        title: title ?? this.title,
-        companyWorkedFor: companyWorkedFor ?? this.companyWorkedFor,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-      );
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = id;
-    map['customer_id'] = customerId;
-    map['title'] = title;
-    map['company_worked_for'] = companyWorkedFor;
-    map['start_date'] = startDate;
-    map['end_date'] = endDate;
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'companyWorkedFor': companyWorkedFor,
+        'startDate': startDate?.toIso8601String(),
+        'endDate': endDate?.toIso8601String(),
+        'description': description,
+      };
 }
 
+/// Represents a single education entry for a customer.
 class Education {
+  final String? id;
+  final String? degree;
+  final String? institution;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String? fieldOfStudy; // Optional: e.g., "Computer Science"
+
   Education({
     this.id,
-    this.customerId,
-    this.school,
     this.degree,
+    this.institution,
     this.startDate,
     this.endDate,
+    this.fieldOfStudy,
   });
 
-  Education.fromJson(dynamic json) {
-    id = json['id'];
-    customerId = json['customer_id'];
-    school = json['school'];
-    degree = json['degree'];
-    startDate = json['start_date'];
-    endDate = json['end_date'];
+  factory Education.fromJson(Map<String, dynamic> json) {
+    return Education(
+      id: json['id'],
+      degree: json['degree'],
+      institution: json['institution'],
+      startDate: json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
+      fieldOfStudy: json['fieldOfStudy'],
+    );
   }
 
-  String? id;
-  String? customerId;
-  String? school;
-  String? degree;
-  String? startDate;
-  String? endDate;
-
-  Education copyWith({
-    String? id,
-    String? customerId,
-    String? school,
-    String? degree,
-    String? startDate,
-    String? endDate,
-  }) =>
-      Education(
-        id: id ?? this.id,
-        customerId: customerId ?? this.customerId,
-        school: school ?? this.school,
-        degree: degree ?? this.degree,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-      );
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = id;
-    map['customer_id'] = customerId;
-    map['school'] = school;
-    map['degree'] = degree;
-    map['start_date'] = startDate;
-    map['end_date'] = endDate;
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'degree': degree,
+        'institution': institution,
+        'startDate': startDate?.toIso8601String(),
+        'endDate': endDate?.toIso8601String(),
+        'fieldOfStudy': fieldOfStudy,
+      };
 }

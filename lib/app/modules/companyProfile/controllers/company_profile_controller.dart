@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/remote/base/status.dart';
-import '../../../data/remote/dto/company/Company_out_dto.dart';
-import '../../../data/remote/dto/job/job_out_dto.dart';
+import '../../../data/remote/base/status.dart'; // Ensure this points to your standard Status class
+import '../../../data/remote/dto/company/Company_out_dto.dart' as company_dto; // Added 'as company_dto'
+import '../../../data/remote/dto/job/job_out_dto.dart' hide CompanyOutDto; // Added 'hide CompanyOutDto'
 import '../../../data/remote/repositories/company/company_repository.dart';
 import '../../../data/remote/repositories/job/job_repository.dart';
 import '../../../di/locator.dart';
@@ -18,13 +18,13 @@ class CompanyProfileController extends GetxController
   final String uuid = Get.arguments;
   late TabController tabController;
 
-  final Rx<Status<CompanyOutDto>> _rxCompany =
-      Rx<Status<CompanyOutDto>>(const Status.loading());
+  final Rx<Status<company_dto.CompanyOutDto>> _rxCompany = // Used 'company_dto.CompanyOutDto'
+      Rx<Status<company_dto.CompanyOutDto>>(Status.loading()); // Used 'company_dto.CompanyOutDto'
 
-  Status<CompanyOutDto> get rxCompany => _rxCompany.value;
+  Status<company_dto.CompanyOutDto> get rxCompany => _rxCompany.value; // Used 'company_dto.CompanyOutDto'
 
   final Rx<Status<List<JobOutDto>>> _rxJobs =
-      Rx<Status<List<JobOutDto>>>(const Status.loading());
+      Rx<Status<List<JobOutDto>>>(Status.loading());
 
   Status<List<JobOutDto>> get rxJobs => _rxJobs.value;
 
@@ -35,10 +35,8 @@ class CompanyProfileController extends GetxController
     loadPage();
   }
 
-
-
   getCompany() async {
-    Status<CompanyOutDto> state = await _companyRepository.get(uuid: uuid);
+    Status<company_dto.CompanyOutDto> state = await _companyRepository.get(uuid: uuid); // Used 'company_dto.CompanyOutDto'
     _rxCompany.value = state;
   }
 
@@ -61,16 +59,18 @@ class CompanyProfileController extends GetxController
   }
 
   void onRetry() async {
-    _rxCompany.value = const Status.loading();
+    _rxCompany.value = Status.loading();
     await getCompany();
     await getCompanyJobs();
     showDialogOnFailure();
   }
 
   void showDialogOnFailure() {
-    if (rxCompany is Failure) {
+    // Corrected to use the isError getter from the standard Status class
+    if (rxCompany.isError) {
       Dialogs.spaceDialog(
-        description: (rxCompany as Failure).reason.toString(),
+        // Access the message property directly from the Status object
+        description: rxCompany.message ?? "An unknown error occurred.",
         btnOkOnPress: onRetry,
         dismissOnBackKeyPress: false,
         dismissOnTouchOutside: false,

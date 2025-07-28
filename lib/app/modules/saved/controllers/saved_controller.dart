@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // Changed from cupertino to material for GlobalKey
 import 'package:get/get.dart';
 import 'package:heroicons/heroicons.dart';
 
 import '../../../data/remote/api/api_routes.dart';
-import '../../../data/remote/base/status.dart';
-import '../../../data/remote/dto/job/job_out_dto.dart';
+import '../../../data/remote/base/status.dart' as base_status; // Ensure this Status class matches the one I provided earlier
+import '../../../data/remote/dto/job/job_out_dto.dart' as job_dto;
 import '../../../data/remote/repositories/customer/customer_repository.dart';
 import '../../../di/locator.dart';
 import '../../../widgets/custom_job_card.dart';
@@ -22,11 +22,12 @@ class SavedController extends GetxController {
 
   ScrollController get savedScrollController => _savedScrollController;
 
-  final Rx<Status<List<JobOutDto>>> _rxSavedJobs =
-      Rx<Status<List<JobOutDto>>>(const Status.idle());
+  // Initializing with Status.loading() or Status.success([]) if no initial data
+  // Assuming Status.idle() is not part of the provided Status class.
+  final Rx<base_status.Status<List<job_dto.JobOutDto>>> _rxSavedJobs =
+      Rx<base_status.Status<List<job_dto.JobOutDto>>>(base_status.Status.loading()); // Changed to Status.loading()
 
-  Status<List<JobOutDto>> get savedJobs => _rxSavedJobs.value;
-
+  base_status.Status<List<job_dto.JobOutDto>> get savedJobs => _rxSavedJobs.value;
 
   @override
   void onReady() {
@@ -34,45 +35,75 @@ class SavedController extends GetxController {
     getSavedJobs();
   }
 
-
   Future<void> jumpToHome() async {
     _rootController.persistentTabController.jumpToTab(0);
   }
 
   Future<void> getSavedJobs() async {
-    _rxSavedJobs.value = const Status.loading();
+    _rxSavedJobs.value = base_status.Status.loading(); // Set to loading state
+    // Ensure currentUser and its id are not null before accessing
+    if (_authController.currentUser?.id == null) {
+      _rxSavedJobs.value = base_status.Status.error(message: "User not authenticated.");
+      return;
+    }
     final result = await _customerRepository.getAllSavedJobs(
-        customerUuid: _authController.currentUser!.id!);
-    _rxSavedJobs.value = result;
+        customerId: _authController.currentUser!.id!); // Changed to correct parameter name
+    // Convert Status<JobsOutDto> to Status<List<JobOutDto>>
+    if (result.isSuccess && result.data != null) {
+      _rxSavedJobs.value = base_status.Status.success((result.data!.jobs ?? []).cast<job_dto.JobOutDto>());
+    } else if (result.isError) {
+      _rxSavedJobs.value = base_status.Status.error(message: result.message);
+    } else if (result.isLoading) {
+      _rxSavedJobs.value = base_status.Status.loading();
+    }
   }
 
   bool isJobSaved(String jobUuid) {
-    final result = savedJobs.whenOrNull(
-        success: (data) => data?.firstWhereOrNull((job) => job.id == jobUuid));
-    return result != null ? true : false;
+    // Safely access data only if the status is success
+    if (savedJobs.isSuccess && savedJobs.data != null) {
+      return savedJobs.data!.any((job) => job.id == jobUuid);
+    }
+    return false;
   }
 
   Future<bool?> onSaveButtonTapped(bool isSaved, String jobUuid) async {
     final result = await onSaveStateChange(isSaved, jobUuid);
-    final savedList = (savedJobs as Success).data!;
-    if (result != null) {
-      removeSavedJobFromAnimatedList(
-        savedList.indexWhere((job) => job.id == jobUuid),
-      );
-      if (savedList.isEmpty) getSavedJobs();
-      HomeController.to.getFeaturedJobs();
-      HomeController.to.getRecentJobs();
+
+    // Only proceed if the result of saving/unsaving was successful
+    if (result != null && savedJobs.isSuccess && savedJobs.data != null) {
+      final savedList = savedJobs.data!;
+      final index = savedList.indexWhere((job) => job.id == jobUuid);
+
+      if (index != -1) { // Check if the job exists in the list
+        removeSavedJobFromAnimatedList(index);
+        if (savedList.isEmpty) {
+          getSavedJobs(); // Refresh if list becomes empty
+        }
+        HomeController.to.getFeaturedJobs();
+        HomeController.to.getRecentJobs();
+      }
     }
     return result;
   }
 
   Future<bool?> onSaveStateChange(bool isSaved, String jobUuid) async {
+    // Ensure currentUser and its id are not null before accessing
+    if (_authController.currentUser?.id == null) {
+      Get.snackbar("Error", "User not authenticated for this action.");
+      return null;
+    }
     final result = await _customerRepository.toggleSave(
-      customerUuid: _authController.currentUser!.id!,
+      _authController.currentUser!.id!,
       jobUuid: jobUuid,
     );
-    final saved = result.whenOrNull(success: (data) => data!.saved);
-    return saved;
+
+    // Safely get the 'saved' status from the result
+    if (result.isSuccess && result.data is Map<String, dynamic> && (result.data as Map<String, dynamic>).containsKey('saved')) {
+      return (result.data as Map<String, dynamic>)['saved'] as bool?;
+    } else if (result.isError) {
+      Get.snackbar("Error", result.message ?? "Failed to update save status.");
+    }
+    return null; // Return null if not successful or 'saved' status is not found
   }
 
   void animateToStart() {
@@ -85,26 +116,30 @@ class SavedController extends GetxController {
   }
 
   void removeSavedJobFromAnimatedList(int index) {
-    final item = (savedJobs as Success).data![index];
-    (savedJobs as Success).data!.removeAt(index);
-    animatedListKey.currentState!.removeItem(index, (context, animation) {
-      return SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
-        ).animate(animation),
-        child: CustomJobCard(
-          avatar: "${ApiRoutes.BASE_URL}${item.company!.image}",
-          companyName: item.company!.name!,
-          employmentType: item.employmentType,
-          jobPosition: item.position,
-          location: item.location,
-          actionIcon: HeroIcons.bookmark,
-          publishTime: item.createdAt!,
-          workplace: item.workplace,
-          description: item.description,
-        ),
-      );
-    });
+    if (savedJobs.isSuccess && savedJobs.data != null && index >= 0 && index < savedJobs.data!.length) {
+      final item = savedJobs.data![index];
+      savedJobs.data!.removeAt(index); // Remove from the underlying list
+      animatedListKey.currentState!.removeItem(index, (context, animation) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1, 0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: CustomJobCard(
+            // Apply null-safe access here as well
+            avatar: "${ApiRoutes.BASE_URL}${item.company?.image ?? 'placeholder.png'}",
+            companyName: item.company?.name ?? '',
+            employmentType: item.employmentType ?? '',
+            jobPosition: item.position ?? '',
+            location: item.location ?? '',
+            actionIcon: HeroIcons.bookmark,
+            publishTime: item.createdAt?.toIso8601String() ?? '',
+            workplace: item.workplace ?? '',
+            description: item.description ?? '',
+            // onTap and onActionTap are not needed for the removed item's animation
+          ),
+        );
+      });
+    }
   }
 }

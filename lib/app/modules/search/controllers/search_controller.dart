@@ -11,12 +11,12 @@ class SearchController extends GetxController {
   final _searchRepository = getIt.get<SearchRepository>();
   final searchController = TextEditingController();
 
+  // Corrected initialization: Status.idle() does not exist in the current Status class.
+  // Initializing with Status.loading() or an empty success state is more appropriate.
   final Rx<Status<List<SearchOutDto>>> _rxResults =
-      Rx<Status<List<SearchOutDto>>>(const Status.idle());
+      Rx<Status<List<SearchOutDto>>>(Status.loading());
 
   Status<List<SearchOutDto>> get rxResults => _rxResults.value;
-
-
 
   @override
   void onClose() {
@@ -26,19 +26,25 @@ class SearchController extends GetxController {
 
   getSearchResult() async {
     if (!searchController.text.isBlank!) {
+      // Set status to loading before making the API call
+      _rxResults.value = Status<List<SearchOutDto>>.loading();
+
       final Status<List<SearchOutDto>> results =
           await _searchRepository.getAll(q: searchController.text.trim());
       _rxResults.value = results;
+    } else {
+      // If search query is blank, set to an empty success state
+      _rxResults.value = Status.success([]);
     }
   }
 
   clearSearch() {
     searchController.clear();
-    _rxResults.value = const Status.idle();
+    // When clearing search, set to an empty success state
+    _rxResults.value = Status.success([]);
   }
 
   void onRetry() {
     getSearchResult();
   }
-
 }

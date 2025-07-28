@@ -11,7 +11,7 @@ class CustomerProfileController extends GetxController {
   final customerRepository = getIt.get<CustomerRepository>();
 
   final Rx<Status<CustomerProfileOutDto>> _rxProfile =
-      Rx(const Status.loading());
+      Rx(Status.loading());
 
   Status<CustomerProfileOutDto> get profile => _rxProfile.value;
 
@@ -21,9 +21,12 @@ class CustomerProfileController extends GetxController {
     loadPage();
   }
 
-
-
   getProfile() async {
+    // Ensure currentUser and its id are not null before accessing
+    if (AuthController.to.currentUser?.id == null) {
+      _rxProfile.value = Status.error(message: "User not authenticated.");
+      return;
+    }
     final state = await customerRepository.getProfile(
         customerUuid: AuthController.to.currentUser!.id!);
     _rxProfile.value = state;
@@ -35,15 +38,17 @@ class CustomerProfileController extends GetxController {
   }
 
   void onRetry() async {
-    _rxProfile.value = const Status.loading();
+    _rxProfile.value = Status.loading(); // Changed to non-const Status.loading()
     await getProfile();
     showDialogOnFailure();
   }
 
   void showDialogOnFailure() {
-    if (profile is Failure) {
+    // Changed 'profile is Failure' to 'profile.isError'
+    if (profile.isError) {
       Dialogs.spaceDialog(
-        description: (profile as Failure).reason.toString(),
+        // Access message from the Status object
+        description: profile.message ?? "An unknown error occurred.",
         btnOkOnPress: onRetry,
         dismissOnBackKeyPress: false,
         dismissOnTouchOutside: false,

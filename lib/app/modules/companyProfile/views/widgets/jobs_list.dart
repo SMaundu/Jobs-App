@@ -14,39 +14,55 @@ class JobsList extends GetView<CompanyProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => controller.rxJobs.when(
-          idle: () => Container(),
-          loading: () => const CircularProgressIndicator(),
-          success: (jobs) => jobs == null || jobs.isEmpty
-              ? const CustomLottie(
-                  title: "This company has not jobs yet.",
-                  asset: "assets/empty.json",
-                )
-              : ListView.builder(
-                  itemCount: jobs.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) => CustomJobCard(
-                    jobPosition: jobs[index].position,
-                    publishTime: jobs[index].createdAt!,
-                    companyName: jobs[index].company!.name!,
-                    employmentType: jobs[index].employmentType!,
-                    location: jobs[index].location!,
-                    workplace: jobs[index].workplace!,
-                    actionIcon: HeroIcons.bookmark,
-                    avatar:
-                        "${ApiRoutes.BASE_URL}${jobs[index].company!.image!}",
-                    description: jobs[index].description!,
-                    onTap: () => Get.toNamed(
-                      Routes.JOB_DETAILS,
-                      arguments: jobs[index].id,
-                    ),
-                    isSaved: SavedController.to.isJobSaved(jobs[index].id!),
-                    onActionTap: (isSaved) =>
-                        controller.onSaveButtonTapped(isSaved, jobs[index].id!),
-                  ),
+    return Obx(() {
+      // Removed .value because controller.rxJobs is already the Status object
+      final status = controller.rxJobs; 
+
+      if (status.isLoading) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (status.isError) {
+        return Center(child: Text(status.message ?? "An unknown error occurred."));
+      } else if (status.isSuccess) {
+        final jobs = status.data; // Access the data from the status
+
+        if (jobs == null || jobs.isEmpty) {
+          return const CustomLottie(
+            title: "This company has no jobs yet.",
+            asset: "assets/empty.json", // Ensure this asset path is correct
+          );
+        } else {
+          return ListView.builder(
+            itemCount: jobs.length,
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            physics: const NeverScrollableScrollPhysics(), // Added to prevent nested scrolling issues
+            itemBuilder: (context, index) {
+              final job = jobs[index]; // Get the current job for easier access
+
+              return CustomJobCard(
+                jobPosition: job.position ?? '', // Null-safe access
+                publishTime: job.createdAt?.toIso8601String() ?? '', // Null-safe access and formatting
+                companyName: job.company?.name ?? '', // Null-safe access
+                employmentType: job.employmentType ?? '', // Null-safe access
+                location: job.location ?? '', // Null-safe access
+                workplace: job.workplace ?? '', // Null-safe access
+                actionIcon: HeroIcons.bookmark,
+                avatar: "${ApiRoutes.BASE_URL}${job.company?.image ?? 'placeholder.png'}", // Null-safe access with placeholder
+                description: job.description ?? '', // Null-safe access
+                onTap: () => Get.toNamed(
+                  Routes.JOB_DETAILS,
+                  arguments: job.id ?? '', // Null-safe access
                 ),
-          failure: (e) => Text(e!),
-        ));
+                // Ensure SavedController is initialized and accessible
+                isSaved: SavedController.to.isJobSaved(job.id ?? ''), // Null-safe access
+                onActionTap: (isSaved) =>
+                    controller.onSaveButtonTapped(isSaved, job.id ?? ''), // Null-safe access
+              );
+            },
+          );
+        }
+      }
+      return Container(); // Fallback for any unhandled status
+    });
   }
 }

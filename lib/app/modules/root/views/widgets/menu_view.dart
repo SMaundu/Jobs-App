@@ -11,6 +11,8 @@ import '../../../../widgets/custom_avatar.dart';
 import '../../../auth/controllers/auth_controller.dart';
 import '../../../home/controllers/home_controller.dart';
 import '../../controllers/root_controller.dart';
+import '../../../../data/remote/base/status.dart'; // Explicitly import Status
+import '../../../../utils/extensions.dart'; // Import for .capitalize
 
 class MenuView extends GetView<RootController> {
   const MenuView({Key? key}) : super(key: key);
@@ -62,7 +64,7 @@ class _Header extends GetView<RootController> {
       decoration: BoxDecoration(
         color: Get.theme.primaryColor,
         image: const DecorationImage(
-          image: Svg('assets/header_bg.svg'),
+          image: Svg('assets/header_bg.svg'), // Ensure this asset path is correct
           fit: BoxFit.cover,
         ),
       ),
@@ -78,15 +80,29 @@ class _Header extends GetView<RootController> {
                 GestureDetector(
                   onTap: () => Get.toNamed(Routes.CUSTOMER_PROFILE),
                   child: Obx(
-                    () => HomeController.to.customerAvatar.when(
-                      idle: () => const SizedBox(),
-                      loading: () => const SizedBox(),
-                      success: (data) => CustomAvatar(
-                        imageUrl: "${ApiRoutes.BASE_URL}$data",
-                        height: 55.h,
-                      ),
-                      failure: (error) => const SizedBox(),
-                    ),
+                    () {
+                      final customerAvatarStatus = HomeController.to.customerAvatar; // Get the Status object
+
+                      // Using the custom getters from the Status class
+                      if (customerAvatarStatus.isLoading) {
+                        return CircleAvatar(radius: 23.h);
+                      } else if (customerAvatarStatus.isSuccess) {
+                        final avatarUrl = customerAvatarStatus.data;
+                        if (avatarUrl != null) {
+                          return CustomAvatar(
+                            imageUrl: "${ApiRoutes.BASE_URL}$avatarUrl",
+                            height: 55.h,
+                          );
+                        }
+                      }
+                      // For error, or if data is null in success, or any other state,
+                      // return a placeholder or an empty SizedBox.
+                      return const SizedBox(
+                        height: 55, // Maintain height to prevent layout shifts
+                        width: 55, // Maintain width
+                        child: CircleAvatar(), // Default placeholder
+                      );
+                    },
                   ),
                 ),
                 IconButton(
@@ -110,7 +126,8 @@ class _Header extends GetView<RootController> {
             ),
             SizedBox(height: 5.h),
             Text(
-              AuthController.to.currentUser!.name!.capitalize!,
+              // Added null-safe access with ?? '' and .capitalize for String extension
+              AuthController.to.currentUser?.name?.capitalizeEachWord() ?? 'Guest', // Using capitalizeEachWord
               style: GoogleFonts.poppins(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w700,
@@ -118,7 +135,8 @@ class _Header extends GetView<RootController> {
               ),
             ),
             Text(
-              AuthController.to.currentUser!.email!,
+              // Added null-safe access with ?? ''
+              AuthController.to.currentUser?.email ?? 'guest@example.com',
               style: GoogleFonts.poppins(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w400,

@@ -17,32 +17,47 @@ class Body extends GetView<CustomerProfileController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => controller.profile.when(
-        idle: () => const SizedBox(),
-        loading: () => const CustomerProfileShimmer(),
-        failure: (err) => const CustomerProfileShimmer(),
-        success: (profile) => CustomScrollView(
-          slivers: [
-            CustomerProfileSliverAppBar(profile: profile!),
-            SliverToBoxAdapter(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 16.h),
-                  child: Column(
-                    children: [
-                      AboutMe(description: profile.description),
-                      Experience(experience: profile.workExperience),
-                      EducationCard(education: profile.education),
-                      Skills(skills: profile.skills),
-                      Languages(languages: profile.language),
-                    ],
+      () {
+        final profileStatus = controller.profile; // Get the Status object
+
+        if (profileStatus.isLoading) {
+          return const CustomerProfileShimmer(); // Show shimmer for loading
+        } else if (profileStatus.isError) {
+          // Show shimmer or an error message for failure
+          return const CustomerProfileShimmer(); // Or a CustomLottie with retry
+        } else if (profileStatus.isSuccess) {
+          final profile = profileStatus.data; // Access data directly
+
+          if (profile == null) {
+            // Handle case where profile data is null even if status is success
+            return const Center(child: Text("Profile data not available."));
+          }
+
+          return CustomScrollView(
+            slivers: [
+              CustomerProfileSliverAppBar(profile: profile), // profile is now non-nullable here
+              SliverToBoxAdapter(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 16.h),
+                    child: Column(
+                      children: [
+                        AboutMe(description: profile.description), // Use updated description field
+                        Experience(experience: profile.workExperience),
+                        EducationCard(education: profile.education),
+                        Skills(skills: profile.skills),
+                        Languages(languages: profile.language), // Use updated language field
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          );
+        }
+        // Fallback for any unhandled status (e.g., initial idle state if not loading, success, or error)
+        return const SizedBox.shrink();
+      },
     );
   }
 }

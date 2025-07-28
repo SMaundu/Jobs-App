@@ -5,28 +5,30 @@ import 'package:carousel_slider/carousel_slider.dart'; // Import for CarouselPag
 
 import '../../../data/remote/base/status.dart';
 import '../../../data/remote/dto/job/job_out_dto.dart';
-import '../../../data/remote/dto/position/position_out_dto.dart'; // Corrected import path
+import '../../../data/remote/dto/position/position_out_dto.dart';
 import '../../../data/remote/repositories/home/home_repository.dart';
 import '../../../di/locator.dart';
+import '../../auth/controllers/auth_controller.dart'; // Import AuthController for currentUser
 
 class HomeController extends GetxController {
   static HomeController get to => Get.find();
 
   final HomeRepository _repository = getIt.get<HomeRepository>();
 
-  final _customerAvatar = const Status<String>.idle().obs;
+  // Correctly initialize Rx<Status> with a named constructor
+  final _customerAvatar = Status<String>.loading().obs;
   Status<String> get customerAvatar => _customerAvatar.value;
 
-  final _featuredJobs = const Status<List<JobOutDto>>.idle().obs;
+  final _featuredJobs = Status<List<JobOutDto>>.loading().obs;
   Status<List<JobOutDto>> get featuredJobs => _featuredJobs.value;
 
-  final _recentJobs = const Status<List<JobOutDto>>.idle().obs;
+  final _recentJobs = Status<List<JobOutDto>>.loading().obs;
   Status<List<JobOutDto>> get recentJobs => _recentJobs.value;
 
-  final _positions = const Status<List<PositionOutDto>>.idle().obs;
+  final _positions = Status<List<PositionOutDto>>.loading().obs;
   Status<List<PositionOutDto>> get positions => _positions.value;
 
-  // Properties for UI interaction that were missing
+  // Properties for UI interaction
   final homeScrollController = ScrollController();
   final indicatorIndex = 0.obs;
   final chipTitle = "All".obs;
@@ -44,10 +46,11 @@ class HomeController extends GetxController {
   }
 
   Future<void> loadHomeData() async {
-    _customerAvatar.value = const Status.loading();
-    _featuredJobs.value = const Status.loading();
-    _recentJobs.value = const Status.loading();
-    _positions.value = const Status.loading();
+    // Set all statuses to loading before fetching
+    _customerAvatar.value = Status.loading();
+    _featuredJobs.value = Status.loading();
+    _recentJobs.value = Status.loading();
+    _positions.value = Status.loading();
     await Future.wait([
       getFeaturedJobs(),
       getRecentJobs(),
@@ -59,65 +62,76 @@ class HomeController extends GetxController {
   Future<void> getFeaturedJobs() async {
     try {
       final response = await _repository.getFeaturedJobs();
-      final jobs = response.data?.jobs;
-      if (jobs != null) {
-        _featuredJobs.value = Status.success(data: jobs);
+      // Access data safely from Status object
+      if (response.isSuccess && response.data != null && response.data!.jobs != null) {
+        _featuredJobs.value = Status.success(response.data!.jobs!);
       } else {
-        _featuredJobs.value =
-            const Status.failure(reason: "No featured jobs found.");
+        // Use Status.error with message parameter
+        _featuredJobs.value = Status.error(message: "No featured jobs found.");
       }
     } on DioException catch (e) {
-      _featuredJobs.value = Status.failure(reason: e.message);
+      _featuredJobs.value = Status.error(message: e.message);
     } catch (e) {
-      _featuredJobs.value = Status.failure(reason: e.toString());
+      _featuredJobs.value = Status.error(message: e.toString());
     }
   }
 
   Future<void> getRecentJobs() async {
     try {
       final response = await _repository.getRecentJobs();
-      final jobs = response.data?.jobs;
-      if (jobs != null) {
-        _recentJobs.value = Status.success(data: jobs);
+      // Access data safely from Status object
+      if (response.isSuccess && response.data != null && response.data!.jobs != null) {
+        _recentJobs.value = Status.success(response.data!.jobs!);
       } else {
-        _recentJobs.value = const Status.failure(reason: "No recent jobs found.");
+        // Use Status.error with message parameter
+        _recentJobs.value = Status.error(message: "No recent jobs found.");
       }
     } on DioException catch (e) {
-      _recentJobs.value = Status.failure(reason: e.message);
+      _recentJobs.value = Status.error(message: e.message);
     } catch (e) {
-      _recentJobs.value = Status.failure(reason: e.toString());
+      _recentJobs.value = Status.error(message: e.toString());
     }
   }
 
   Future<void> _getPositions() async {
     try {
       final response = await _repository.getPositions();
-      final positions = response.data?.positions;
-      if (positions != null) {
-        _positions.value = Status.success(data: positions);
+      // Access data safely from Status object
+      // Changed from response.data!.positions to response.data!
+      if (response.isSuccess && response.data != null) {
+        _positions.value = Status.success(response.data!);
       } else {
-        _positions.value = const Status.failure(reason: "No positions found.");
+        // Use Status.error with message parameter
+        _positions.value = Status.error(message: "No positions found.");
       }
     } on DioException catch (e) {
-      _positions.value = Status.failure(reason: e.message);
+      _positions.value = Status.error(message: e.message);
     } catch (e) {
-      _positions.value = Status.failure(reason: e.toString());
+      _positions.value = Status.error(message: e.toString());
     }
   }
 
   Future<void> _getCustomerAvatar() async {
     try {
-      final response = await _repository.getCustomerProfile();
-      final avatarUrl = response.data?['data']?['avatar'];
-      if (avatarUrl != null) {
-        _customerAvatar.value = Status.success(data: avatarUrl);
+      // Ensure currentUser and its id are not null before accessing
+      final customerId = AuthController.to.currentUser?.id;
+      if (customerId == null) {
+        _customerAvatar.value = Status.error(message: "User not authenticated.");
+        return;
+      }
+
+      final response = await _repository.getCustomerProfile(customerUuid: customerId);
+      // Access data safely from Status object
+      if (response.isSuccess && response.data != null && response.data!.avatar != null) {
+        _customerAvatar.value = Status.success(response.data!.avatar!);
       } else {
-        _customerAvatar.value = const Status.failure(reason: "Avatar not found.");
+        // Use Status.error with message parameter
+        _customerAvatar.value = Status.error(message: "Avatar not found.");
       }
     } on DioException catch (e) {
-      _customerAvatar.value = Status.failure(reason: e.message);
+      _customerAvatar.value = Status.error(message: e.message);
     } catch (e) {
-      _customerAvatar.value = Status.failure(reason: e.toString());
+      _customerAvatar.value = Status.error(message: e.toString());
     }
   }
 

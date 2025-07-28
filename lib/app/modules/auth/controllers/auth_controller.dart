@@ -6,6 +6,7 @@ import 'package:intl_phone_field/countries.dart';
 
 import '../../../data/local/entities/user_entity.dart';
 import '../../../data/remote/base/status.dart';
+// Removed: import '../../../data/remote/base/status.freezed.dart'; // Not needed for non-freezed Status class
 import '../../../data/remote/dto/auth/login_in_dto.dart';
 import '../../../data/remote/dto/auth/login_out_dto.dart';
 import '../../../data/remote/dto/auth/register_company_dto.dart';
@@ -15,9 +16,9 @@ import '../../../data/remote/dto/auth/register_customer_out_dto.dart';
 import '../../../data/remote/repositories/auth/auth_repository.dart';
 import '../../../di/locator.dart';
 import '../../../domain/enums/user_type.dart';
-import '../../../routes/app_pages.dart';
 import '../../../utils/functions.dart';
 import '../../../widgets/snackbars.dart';
+import '../../../routes/app_pages.dart'; // Ensure Routes is imported
 import '../views/login/widgets/choose_bottom_sheet.dart';
 
 class AuthController extends GetxController {
@@ -25,8 +26,8 @@ class AuthController extends GetxController {
   final _authRepository = getIt.get<AuthRepository>();
 
   /*
-  * Customer Form Fields.
-  * */
+   * Customer Form Fields.
+   * */
   final GlobalKey<FormState> customerFormKey = GlobalKey<FormState>();
   final customerFullNameController = TextEditingController();
   final customerPhoneNumController = TextEditingController();
@@ -34,8 +35,8 @@ class AuthController extends GetxController {
   final customerPasswordController = TextEditingController();
 
   /*
-  * Company Form Fields
-  * */
+   * Company Form Fields
+   * */
   final GlobalKey<FormState> companyFormKey = GlobalKey<FormState>();
   final companyNameController = TextEditingController();
   final companyBusinessNumberController = TextEditingController();
@@ -45,15 +46,15 @@ class AuthController extends GetxController {
   final companyPasswordController = TextEditingController();
 
   /*
-  * Login Form Fields
-  * */
+   * Login Form Fields
+   * */
   final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   final loginEmailController = TextEditingController();
   final loginPasswordController = TextEditingController();
 
   /*
-  * Rx
-  * */
+   * Rx
+   * */
 
   final RxString _rxCountry = RxString('');
 
@@ -63,19 +64,22 @@ class AuthController extends GetxController {
 
   UserEntity? get currentUser => _rxnCurrentUser.value;
 
+  // Corrected initialization to use Status.loading() and explicitly typed
   final Rx<Status<RegisterCustomerOutDto>> _rxRegisterCustomerState =
-      Rx(const Status.idle());
+      Rx(Status<RegisterCustomerOutDto>.loading());
 
   Status<RegisterCustomerOutDto> get registerCustomerState =>
       _rxRegisterCustomerState.value;
 
+  // Corrected initialization to use Status.loading() and explicitly typed
   final Rx<Status<RegisterCompanyOutDto>> _rxRegisterCompanyState =
-      Rx(const Status.idle());
+      Rx(Status<RegisterCompanyOutDto>.loading());
 
   Status<RegisterCompanyOutDto> get registerCompanyState =>
       _rxRegisterCompanyState.value;
 
-  final Rx<Status<LoginOutDto>> _rxLoginState = Rx(const Status.idle());
+  // Corrected initialization to use Status.loading() and explicitly typed
+  final Rx<Status<LoginOutDto>> _rxLoginState = Rx(Status<LoginOutDto>.loading());
 
   Status<LoginOutDto> get loginState => _rxLoginState.value;
 
@@ -102,7 +106,6 @@ class AuthController extends GetxController {
     }
   }
 
-
   @override
   void onClose() {
     super.onClose();
@@ -122,8 +125,12 @@ class AuthController extends GetxController {
 
   void _getCurrentUser() async {
     final result = await _authRepository.readStorage(key: 'user');
-    result.whenOrNull(
-        success: (data) => _rxnCurrentUser.value = UserEntity.fromMap(data));
+    // Using isSuccess getter and direct data access
+    if (result.isSuccess) {
+      if (result.data != null) {
+        _rxnCurrentUser.value = UserEntity.fromMap(result.data);
+      }
+    }
   }
 
   void onCountryChanged(Country country) {
@@ -148,7 +155,10 @@ class AuthController extends GetxController {
 
   void logout() async {
     final result = await _authRepository.removeStorage(key: 'user');
-    result.whenOrNull(success: (data) => Get.offAllNamed(Routes.LOGIN));
+    // Using isSuccess getter
+    if (result.isSuccess) {
+      Get.offAllNamed(Routes.LOGIN);
+    }
   }
 
   Future<void> _login() async {
@@ -158,10 +168,12 @@ class AuthController extends GetxController {
         password: loginPasswordController.text,
       ),
     );
-    loginState.whenOrNull(
-      success: (data) {
+    // Using isSuccess and isError getters
+    if (loginState.isSuccess) {
+      final data = loginState.data;
+      if (data != null) {
         _saveUserInStorage(
-          id: data!.id,
+          id: data.id,
           email: data.email,
           name: data.name,
           token: data.token!.access,
@@ -171,9 +183,10 @@ class AuthController extends GetxController {
         _getCurrentUser();
         Get.offAllNamed(Routes.ROOT);
         _clearTextControllers();
-      },
-      failure: showSnackBarOnFailure,
-    );
+      }
+    } else if (loginState.isError) {
+      showSnackBarOnFailure(loginState.message);
+    }
   }
 
   Future<void> _registerCustomer() async {
@@ -185,10 +198,12 @@ class AuthController extends GetxController {
         phone: "$country${customerPhoneNumController.text}",
       ),
     );
-    registerCustomerState.whenOrNull(
-      success: (data) {
+    // Using isSuccess and isError getters
+    if (registerCustomerState.isSuccess) {
+      final data = registerCustomerState.data;
+      if (data != null) {
         _saveUserInStorage(
-            id: data!.customer!.id,
+            id: data.customer!.id,
             token: data.token!.access,
             name: data.customer!.name,
             email: data.customer!.email,
@@ -198,9 +213,10 @@ class AuthController extends GetxController {
         _getCurrentUser();
         Get.offAllNamed(Routes.ROOT);
         _clearTextControllers();
-      },
-      failure: showSnackBarOnFailure,
-    );
+      }
+    } else if (registerCustomerState.isError) {
+      showSnackBarOnFailure(registerCustomerState.message);
+    }
   }
 
   Future<void> _registerCompany() async {
@@ -214,13 +230,13 @@ class AuthController extends GetxController {
         password: companyPasswordController.text,
       ),
     );
-    registerCompanyState.whenOrNull(
-      success: (data) {
-        Get.offAllNamed(Routes.WAITTING);
-        _clearTextControllers();
-      },
-      failure: showSnackBarOnFailure,
-    );
+    // Using isSuccess and isError getters
+    if (registerCompanyState.isSuccess) {
+      Get.offAllNamed(Routes.WAITTING);
+      _clearTextControllers();
+    } else if (registerCompanyState.isError) {
+      showSnackBarOnFailure(registerCompanyState.message);
+    }
   }
 
   void _saveUserInStorage({

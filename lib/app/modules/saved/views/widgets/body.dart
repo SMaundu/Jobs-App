@@ -13,22 +13,30 @@ class Body extends GetView<SavedController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Center(
-        child: controller.savedJobs.when(
-          idle: () => const RecentJobsShimmer(),
-          loading: () => const RecentJobsShimmer(),
-          success: (data) {
-            if (data!.isEmpty) return const NoSaving();
-            return SavedJobs(jobs: data);
-          },
-          failure: (e) => CustomLottie(
+      () {
+        final status = controller.savedJobs; // Get the current status
+
+        if (status.isLoading) {
+          return const Center(child: RecentJobsShimmer()); // Show shimmer for loading
+        } else if (status.isSuccess) {
+          final data = status.data; // Access data directly
+
+          if (data == null || data.isEmpty) {
+            return const NoSaving();
+          }
+          return SavedJobs(jobs: data);
+        } else if (status.isError) {
+          // Access message directly
+          return CustomLottie(
             asset: "assets/space.json",
             repeat: true,
-            title: e!,
+            title: status.message ?? "An unexpected error occurred.", // Use status.message
             onTryAgain: controller.onRetry,
-          ),
-        ),
-      ),
+          );
+        }
+        // Fallback for any unhandled state (e.g., initial state if not loading, success, or error)
+        return const SizedBox.shrink(); // Or a default widget
+      },
     );
   }
 }

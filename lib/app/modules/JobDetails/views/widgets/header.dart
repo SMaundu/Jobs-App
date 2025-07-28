@@ -47,19 +47,19 @@ class Header extends GetView<JobDetailsController> {
             child: Row(
               children: [
                 CustomTag(
-                  title: job.workplace,
+                  title: job.workplace ?? '',
                   icon: HeroIcons.briefcase,
                   backgroundColor: Colors.white.withOpacity(0.15),
                   titleColor: Theme.of(context).colorScheme.surface,
                 ),
                 CustomTag(
-                  title: job.employmentType,
+                  title: job.employmentType ?? '',
                   icon: HeroIcons.fire,
                   backgroundColor: Colors.white.withOpacity(0.15),
                   titleColor: Theme.of(context).colorScheme.surface,
                 ),
                 CustomTag(
-                  title: job.location,
+                  title: job.location ?? '',
                   icon: HeroIcons.mapPin,
                   backgroundColor: Colors.white.withOpacity(0.15),
                   titleColor: Theme.of(context).colorScheme.surface,

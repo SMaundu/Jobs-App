@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../base/idto.dart';
-import '../../base/status.dart';
+import '../../base/status.dart'; // Ensure this Status class matches the one I provided earlier
 import '../../dto/application/application_out_dto.dart';
 import '../../exceptions/dio_exceptions.dart';
 import '../../services/application/i_application_service.dart';
@@ -16,10 +16,10 @@ class ApplicationRepository implements IApplicationRepository {
   Future<Status<bool>> create({required IDto dto}) async {
     try {
       await service.create(dto: dto);
-      return const Status.success(data: true);
+      return Status.success(true); // Changed from Status.success(data: true)
     } on DioError catch (e) {
       final errMsg = DioExceptions.fromDioError(e).toString();
-      return Status.failure(reason: errMsg);
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: errMsg)
     }
   }
 
@@ -27,10 +27,10 @@ class ApplicationRepository implements IApplicationRepository {
   Future<Status<bool>> delete({required String applicationId}) async {
     try {
       await service.delete(applicationId: applicationId);
-      return const Status.success(data: true);
+      return  Status.success(true); // Changed from Status.success(data: true)
     } on DioError catch (e) {
       final errMsg = DioExceptions.fromDioError(e).toString();
-      return Status.failure(reason: errMsg);
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: errMsg)
     }
   }
 
@@ -38,10 +38,10 @@ class ApplicationRepository implements IApplicationRepository {
   Future<Status<ApplicationOutDto>> get({required String applicationId}) async {
     try {
       final response = await service.get(applicationId: applicationId);
-      return Status.success(data: ApplicationOutDto.fromJson(response.data));
+      return Status.success(ApplicationOutDto.fromJson(response.data)); // Changed from Status.success(data: ...)
     } on DioError catch (e) {
       final errMsg = DioExceptions.fromDioError(e).toString();
-      return Status.failure(reason: errMsg);
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: errMsg)
     }
   }
 
@@ -55,10 +55,10 @@ class ApplicationRepository implements IApplicationRepository {
       final applications = (response.data['items'] as List)
           .map((e) => ApplicationOutDto.fromJson(e))
           .toList();
-      return Status.success(data: applications);
+      return Status.success(applications); // Changed from Status.success(data: ...)
     } on DioError catch (e) {
       final errMsg = DioExceptions.fromDioError(e).toString();
-      return Status.failure(reason: errMsg);
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: errMsg)
     }
   }
 }

@@ -21,12 +21,12 @@ class JobDetailsController extends GetxController {
   final _applicationRepository = getIt.get<ApplicationRepository>();
 
   final Rx<Status<JobOutDto>> _rxJob =
-      Rx<Status<JobOutDto>>(const Status.loading());
+      Rx<Status<JobOutDto>>(Status.loading()); // Changed to non-const
 
   Status<JobOutDto> get job => _rxJob.value;
 
   final Rx<Status<List<JobOutDto>>> _rxSimilarJobs =
-      Rx<Status<List<JobOutDto>>>(const Status.loading());
+      Rx<Status<List<JobOutDto>>>(Status.loading()); // Changed to non-const
 
   Status<List<JobOutDto>> get similarJobs => _rxSimilarJobs.value;
 
@@ -36,8 +36,6 @@ class JobDetailsController extends GetxController {
     loadPage();
   }
 
-
-
   Future<void> getJobDetails() async {
     final Status<JobOutDto> state = await _jobRepository.get(uuid: uuid);
     _rxJob.value = state;
@@ -45,6 +43,12 @@ class JobDetailsController extends GetxController {
   }
 
   Future<void> applyToJob(String jobId, String whyApply) async {
+    // Ensure currentUser and its id are not null before accessing
+    if (AuthController.to.currentUser?.id == null) {
+      SnackBars.failure("Error", "User not authenticated for this action.");
+      return;
+    }
+
     final result = await _applicationRepository.create(
       dto: ApplicationInDto(
         customerId: AuthController.to.currentUser!.id,
@@ -52,24 +56,35 @@ class JobDetailsController extends GetxController {
         whyApply: whyApply,
       ),
     );
-    result.whenOrNull(
-      success: (data) {
-        FocusManager.instance.primaryFocus?.unfocus();
-        Get.back();
-        popupBottomSheet(bottomSheetBody: const SubmitBottomSheet());
-      },
-      failure: (e) => SnackBars.failure("Oops!", e.toString()),
-    );
+    // Using isSuccess and isError getters
+    if (result.isSuccess) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      Get.back();
+      popupBottomSheet(bottomSheetBody: const SubmitBottomSheet());
+    } else if (result.isError) {
+      SnackBars.failure("Oops!", result.message ?? "An unknown error occurred.");
+    }
   }
 
   Future<void> getSimilarJobs() async {
-    job.whenOrNull(success: (data) async {
-      final jobs = await _jobRepository.getAll(position: data!.position);
-      jobs.whenOrNull(
-          success: (data) =>
-              data!.removeWhere((element) => element.id == uuid));
-      _rxSimilarJobs.value = jobs;
-    });
+    // Using isSuccess getter
+    if (job.isSuccess) {
+      final data = job.data;
+      if (data != null && data.position != null) {
+        final jobs = await _jobRepository.getAll(position: data.position);
+        // Using isSuccess getter
+        if (jobs.isSuccess && jobs.data != null) {
+          jobs.data!.removeWhere((element) => element.id == uuid);
+        }
+        _rxSimilarJobs.value = jobs;
+      } else {
+        _rxSimilarJobs.value = Status.error(message: "Job position not available for similar jobs.");
+      }
+    } else if (job.isError) {
+      _rxSimilarJobs.value = Status.error(message: job.message ?? "Failed to load job details for similar jobs.");
+    } else {
+      _rxSimilarJobs.value = Status.loading(); // Keep loading if job details are not yet loaded
+    }
   }
 
   Future<bool?> onSaveButtonTapped(bool isSaved, String jobUuid) async {
@@ -87,15 +102,16 @@ class JobDetailsController extends GetxController {
   }
 
   void onRetry() async {
-    _rxJob.value = const Status.loading();
+    _rxJob.value = Status.loading(); // Changed to non-const
     await getJobDetails();
     showDialogOnFailure();
   }
 
   void showDialogOnFailure() {
-    if (job is Failure) {
+    // Using isError getter
+    if (job.isError) {
       Dialogs.spaceDialog(
-        description: (job as Failure).reason.toString(),
+        description: job.message ?? "An unknown error occurred.",
         btnOkOnPress: onRetry,
         dismissOnBackKeyPress: false,
         dismissOnTouchOutside: false,

@@ -5,6 +5,7 @@ import 'package:jobs_flutter_app/app/data/remote/base/status.dart'; // Adjust th
 import '../../dto/job/job_out_dto.dart';
 import '../../dto/job/jobs_out_dto.dart';
 import '../../services/job/job_service.dart';
+import '../../exceptions/dio_exceptions.dart'; // Import DioExceptions
 
 /// A repository for handling job-related API requests.
 /// It uses a [JobService] to communicate with the backend.
@@ -19,11 +20,12 @@ class JobRepository {
       final response = await _service.get(uuid: uuid);
       // Assuming the single job object is nested under a 'data' key.
       final job = JobOutDto.fromJson(response.data['data']);
-      return Status.success(data: job);
-    } on DioException catch (e) {
-      return Status.failure(reason: e.message ?? "An error occurred");
+      return Status.success(job); // Changed from Status.success(data: job)
+    } on DioException catch (e) { // Changed DioError to DioException
+      final errMsg = DioExceptions.fromDioError(e).toString();
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: errMsg)
     } catch (e) {
-      return Status.failure(reason: e.toString());
+      return Status.error(message: e.toString()); // Changed from Status.failure(reason: e.toString())
     }
   }
 
@@ -47,11 +49,12 @@ class JobRepository {
       final response = await _service.getAll(queryParameters: queryParameters);
       // JobsOutDto parses the list from the response data.
       final jobsOutDto = JobsOutDto.fromJson(response.data);
-      return Status.success(data: jobsOutDto.jobs ?? []);
-    } on DioException catch (e) {
-      return Status.failure(reason: e.message ?? "An error occurred");
+      return Status.success(jobsOutDto.jobs ?? []); // Changed from Status.success(data: jobsOutDto.jobs ?? [])
+    } on DioException catch (e) { // Changed DioError to DioException
+      final errMsg = DioExceptions.fromDioError(e).toString();
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: errMsg)
     } catch (e) {
-      return Status.failure(reason: e.toString());
+      return Status.error(message: e.toString()); // Changed from Status.failure(reason: e.toString())
     }
   }
 
@@ -64,11 +67,12 @@ class JobRepository {
     try {
       final response = await _service.getAll(queryParameters: queryParameters);
       final dto = JobsOutDto.fromJson(response.data);
-      return Status.success(data: dto);
-    } on DioException catch (e) {
-      return Status.failure(reason: e.message ?? "An error occurred");
+      return Status.success(dto); // Changed from Status.success(data: dto)
+    } on DioException catch (e) { // Changed DioError to DioException
+      final errMsg = DioExceptions.fromDioError(e).toString();
+      return Status.error(message: errMsg); // Changed from Status.failure(reason: errMsg)
     } catch (e) {
-      return Status.failure(reason: e.toString());
+      return Status.error(message: e.toString()); // Changed from Status.failure(reason: e.toString())
     }
   }
 }
